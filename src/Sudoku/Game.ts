@@ -4,13 +4,15 @@ import { Group } from "./Group";
 export class Game {
   public readonly size: number;
   public readonly length: number;
-  public readonly columns: readonly Group[];
-  public readonly rows: readonly Group[];
-  public readonly squares: readonly Group[];
+  public readonly columns: readonly (readonly Cell[])[];
+  public readonly rows: readonly (readonly Cell[])[];
+  public readonly squares: readonly (readonly Cell[])[];
+  public readonly tokens: readonly string[];
 
   constructor(size: number) {
     this.size = size;
     const length = (this.length = size * size);
+    this.tokens = getTokens(size);
 
     const columns: Group[] = (this.columns = []);
     const rows: Group[] = (this.rows = []);
@@ -35,17 +37,21 @@ export class Game {
         }
       }
     }
+
+    console.debug(this);
   }
 
-  public clear(clearMarks: boolean = true): void {
+  public clear(clearMarks: boolean = true, force: boolean = false): void {
     this.columns.forEach((row) => {
       row.forEach((tile) => {
+        // @ts-expect-error accessing private _locked
+        if (force) tile._locked = false;
         if (!tile.locked) {
           tile.value = undefined;
         }
         if (clearMarks) {
           for (let i = 0; i < this.length; i++) {
-            tile.toggleNote(i, true);
+            tile.toggleNote(i, false);
           }
         }
       });
@@ -67,5 +73,35 @@ export class Game {
     if (value != value >> 0) {
       throw Error("Not an integer.");
     }
+  }
+
+  public save() {
+    return this.rows
+      .flat()
+      .map((c) => (c.value === undefined ? "-" : this.tokens[c.value]))
+      .join("");
+  }
+  public load(data: string[][]) {
+    this.clear(true, true);
+    const tokenValues = Object.fromEntries(this.tokens.map((t, v) => [t, v]));
+    this.rows.forEach((row, r) =>
+      row.forEach((cell, c) => (cell.value = tokenValues[data[r][c]])),
+    );
+    this.lock();
+  }
+}
+
+function getTokens(size: number) {
+  switch (size) {
+    case 2:
+      return "♠♥♦♣".split("");
+    case 3:
+      return "123456789".split("");
+    case 4:
+      return "0123456789ABCDEF".split("");
+    case 5:
+      return "ABCDEFGHIJKLMNOPQRSTUVWXY".split("");
+    default:
+      throw "Invalid size";
   }
 }

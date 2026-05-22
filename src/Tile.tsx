@@ -42,7 +42,9 @@ export function Tile({ cell, highlight, setHighlight }: TileProps) {
             <div
               key={i}
               className={note}
-              onClick={() => (cell.value = i)}
+              onClick={() => {
+                if (note != "used") cell.value = i;
+              }}
               onAuxClick={(e) => {
                 if (e.button == 1) cell.toggleNote(i);
               }}
@@ -65,7 +67,7 @@ export function Tile({ cell, highlight, setHighlight }: TileProps) {
             setHighlight(value);
           }}
         >
-          <span>{value + 1}</span>
+          <span>{cell.game.tokens[value]}</span>
         </div>
       )}
     </div>

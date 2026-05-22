@@ -2,16 +2,14 @@ import { Game } from "./Game";
 import { Cell } from "./Cell";
 import { createDispatcher } from "./Dispatcher";
 
-export class Group {
-  private readonly _list: Cell[] = [];
+export class Group extends Array<Cell> {
   private readonly subscribe;
 
   public readonly game: Game;
   public updateUsage;
-  public map = this._list.map.bind(this._list);
-  public forEach = this._list.forEach.bind(this._list);
 
   constructor(game: Game) {
+    super();
     this.game = game;
     const { subscribe, dispatch } =
       createDispatcher<[action: 1 | -1, value: number]>();
@@ -23,7 +21,7 @@ export class Group {
     item: Cell,
     updateUsage: (action: 1 | -1, value: number) => void,
   ): void {
-    this._list[this._list.length] = item;
+    this.push(item);
     this.subscribe(updateUsage);
   }
 }
