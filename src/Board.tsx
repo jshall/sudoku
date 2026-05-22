@@ -1,24 +1,31 @@
-import { useMemo } from "react";
+import { useState } from "react";
 import "./Board.css";
 import { Tile } from "./Tile";
 import { Game } from "./Sudoku";
 
-type BoardProps = { size: number };
-export default function Board({ size }: BoardProps) {
-  const children = useMemo(
-    () =>
-      new Game(size).squares.map((group, i) => (
+type BoardProps = { game: Game };
+export default function Board({ game }: BoardProps) {
+  const [highlight, setHiglight] = useState<number>();
+
+  return (
+    <div
+      className="board"
+      style={{ "--size": game.size } as React.CSSProperties}
+    >
+      {game.squares.map((group, i) => (
         <div key={i} className="group">
           {group.map((cell, i) => (
-            <Tile key={i} cell={cell} />
+            <Tile
+              key={i}
+              cell={cell}
+              highlight={highlight}
+              setHighlight={(value: number) =>
+                setHiglight(highlight === value ? undefined : value)
+              }
+            />
           ))}
         </div>
-      )),
-    [size],
-  );
-  return (
-    <div className="board" style={{ "--size": size } as React.CSSProperties}>
-      {children}
+      ))}
     </div>
   );
 }

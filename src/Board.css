@@ -2,8 +2,8 @@
   --size-note: calc(
     round(
       down,
-      (((100vmin - 2px) / var(--size) - 2px) / var(--size) - 3px) /
-        var(--size) - 1px,
+      (((100vmin - 2px) / var(--size) - 2px) / var(--size) - 4px) /
+        var(--size) - 2px,
       1px
     )
   );
@@ -21,6 +21,9 @@
     > .tile {
       cursor: pointer;
       border: solid gray 1px;
+      &.highlight {
+        background: var(--accent-border);
+      }
       > .value {
         display: flex;
         justify-content: center;
@@ -40,17 +43,17 @@
         align-items: center;
         grid-template-rows: repeat(var(--size), 1fr);
         grid-template-columns: repeat(var(--size), 1fr);
-        padding: 1px;
-        gap: 1px;
+        padding: 2px;
+        gap: 2px;
         > * {
           width: var(--size-note);
           height: var(--size-note);
           &.possible,
           &.unlikely {
-            background: green;
+            background: rgba(0, 128, 0, 0.6);
             border-radius: 50%;
             &.unlikely {
-              background: rgba(0, 128, 0, 0.4);
+              background: rgba(0, 128, 0, 0.3);
             }
           }
         }

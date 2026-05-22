@@ -1,8 +1,12 @@
-import { useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import type { Cell } from "./Sudoku";
 
-export type TileProps = { cell: Cell };
-export function Tile({ cell }: TileProps) {
+export type TileProps = {
+  cell: Cell;
+  highlight?: number;
+  setHighlight: (value: number) => void;
+};
+export function Tile({ cell, highlight, setHighlight }: TileProps) {
   const locked = useSyncExternalStore(
     cell.lockUpdates.subscribe,
     () => cell.locked,
@@ -11,21 +15,41 @@ export function Tile({ cell }: TileProps) {
     cell.valueUpdates.subscribe,
     () => cell.value,
   );
-  const notes = useSyncExternalStore(
+  const noteString = useSyncExternalStore(
     cell.noteUpdates.subscribe,
     () => cell.notes,
   );
 
+  const notes = useMemo(
+    () => noteString.split("|") as ("used" | "unlikely" | "possible")[],
+    [noteString],
+  );
+  const classList = useMemo(() => {
+    const list = ["tile"];
+    if (highlight !== undefined) {
+      if (highlight === value) list.push("highlight");
+      if (value === undefined && notes[highlight] === "possible")
+        list.push("highlight");
+    }
+    return list;
+  }, [value, notes, highlight]);
+
   return (
-    <div className="tile">
+    <div className={classList.join(" ")}>
       {value === undefined ? (
         <div className="notes">
-          {notes.split("|").map((note, i) => (
+          {notes.map((note, i) => (
             <div
               key={i}
               className={note}
               onClick={() => (cell.value = i)}
-              onAuxClick={() => cell.toggleNote(i)}
+              onAuxClick={(e) => {
+                if (e.button == 1) cell.toggleNote(i);
+              }}
+              onContextMenuCapture={(e) => {
+                e.preventDefault();
+                setHighlight(i);
+              }}
             />
           ))}
         </div>
@@ -33,7 +57,13 @@ export function Tile({ cell }: TileProps) {
         <div
           className={`value ${locked ? "locked" : ""}`}
           onClick={() => (cell.value = undefined)}
-          onAuxClick={() => cell.lock()}
+          onAuxClick={(e) => {
+            if (e.button == 1) cell.lock();
+          }}
+          onContextMenuCapture={(e) => {
+            e.preventDefault();
+            setHighlight(value);
+          }}
         >
           <span>{value + 1}</span>
         </div>
