@@ -11,17 +11,18 @@
   display: grid;
   grid-template-rows: repeat(var(--size-board), 1fr);
   grid-template-columns: repeat(var(--size-board), 1fr);
-  border: solid white 1px;
+  border: var(--border-hard) 1px;
   > .group {
     flex: 1;
     display: grid;
     grid-template-rows: repeat(var(--size-board), 1fr);
     grid-template-columns: repeat(var(--size-board), 1fr);
-    border: solid white 1px;
+    border: var(--border-hard) 1px;
     > .tile {
-      border: solid gray 1px;
+      color: var(--pencil);
+      border: var(--border-soft) 1px;
       &.highlight {
-        background: var(--accent-border);
+        background: var(--highlight);
       }
       > .value {
         display: flex;
@@ -30,10 +31,11 @@
         width: calc(var(--size-tile));
         height: calc(var(--size-tile));
         font-size: calc(0.8 * var(--size-tile));
-        color: var(--text-h);
+        font-weight: bold;
+        font-family: var(--mono);
         cursor: pointer;
         &.locked {
-          color: var(--accent);
+          color: var(--pen);
           cursor: default;
         }
       }
@@ -49,17 +51,42 @@
         > * {
           width: var(--size-note);
           height: var(--size-note);
+          font-size: var(--size-note);
+          display: flex;
+          justify-content: center;
+          align-items: center;
           &.possible,
           &.unlikely {
-            cursor: pointer;
-            background: rgba(0, 128, 0, 0.6);
-            border-radius: 50%;
+            cursor: crosshair;
             &.unlikely {
-              background: rgba(0, 128, 0, 0.2);
+              color: rgb(from var(--pencil) r g b / 0.4);
             }
           }
         }
       }
+    }
+  }
+  > #solved {
+    display: none;
+    pointer-events: none;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    line-height: normal;
+    padding: 0.2em 0.6em;
+    font-size: 20vmin;
+
+    background: radial-gradient(
+      ellipse,
+      rgb(from var(--bg) r g b / 0.8) 55%,
+      #fff0 70%
+    );
+
+    .solved > & {
+      display: block;
     }
   }
 }

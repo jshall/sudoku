@@ -1,4 +1,5 @@
 import { Cell } from "./Cell";
+import { createDispatcher } from "./Dispatcher";
 import { Group } from "./Group";
 
 export class Game {
@@ -8,6 +9,7 @@ export class Game {
   public readonly rows: readonly (readonly Cell[])[];
   public readonly blocks: readonly (readonly Cell[])[];
   public readonly tokens: readonly string[];
+  public readonly valueUpdates = createDispatcher();
 
   constructor(size: number) {
     this.size = size;
@@ -37,6 +39,10 @@ export class Game {
       }
     }
     globalThis.game = this;
+  }
+
+  public get solved() {
+    return this.rows.every((r) => r.every((c) => c.value !== undefined));
   }
 
   public clear(clearMarks: boolean = true, force: boolean = false): void {

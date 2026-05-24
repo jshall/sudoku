@@ -53,6 +53,7 @@ export class Cell {
     });
     this._value = value;
     this.valueUpdates.dispatch();
+    this.game.valueUpdates.dispatch();
   }
   get notes() {
     return this._notes

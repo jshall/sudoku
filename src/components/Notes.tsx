@@ -22,7 +22,9 @@ export function Notes({ notes, cell, setHighlight }: NotesProps) {
             e.preventDefault();
             setHighlight(i);
           }}
-        />
+        >
+          {note != "used" ? cell.game.tokens[i] : ""}
+        </div>
       ))}
     </div>
   );

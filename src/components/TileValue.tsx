@@ -10,8 +10,10 @@ export function TileValue({ locked, cell, setHighlight, value }: NewType) {
   return (
     <div
       className={`value ${locked ? "locked" : ""}`}
-      // eslint-disable-next-line react-hooks/immutability
-      onClick={() => (cell.value = undefined)}
+      onClick={() => {
+        // eslint-disable-next-line react-hooks/immutability
+        if (!locked) cell.value = undefined;
+      }}
       onAuxClick={(e) => {
         if (e.button == 1) cell.lock();
       }}
@@ -20,7 +22,7 @@ export function TileValue({ locked, cell, setHighlight, value }: NewType) {
         setHighlight(value);
       }}
     >
-      <span>{cell.game.tokens[value]}</span>
+      {cell.game.tokens[value]}
     </div>
   );
 }

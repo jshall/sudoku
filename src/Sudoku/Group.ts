@@ -1,6 +1,6 @@
-import { Game } from "./Game";
 import { Cell } from "./Cell";
 import { createDispatcher } from "./Dispatcher";
+import { Game } from "./Game";
 
 export class Group extends Array<Cell> {
   private readonly subscribe;

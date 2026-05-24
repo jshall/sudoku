@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Game } from "../Sudoku";
 import "./Board.css";
 import { Tile } from "./Tile";
@@ -8,6 +8,11 @@ export default function Board({ game }: BoardProps) {
   const board = useRef<HTMLDivElement>(null);
   const [highlight, setHiglight] = useState<number>();
 
+  const solved = useSyncExternalStore(
+    game.valueUpdates.subscribe,
+    () => game.solved,
+  );
+
   useEffect(
     () =>
       board.current?.style.setProperty("--size-board", game.size.toString()),
@@ -15,7 +20,7 @@ export default function Board({ game }: BoardProps) {
   );
 
   return (
-    <div id="board" ref={board}>
+    <div id="board" className={solved ? "solved" : undefined} ref={board}>
       {game.blocks.map((group, i) => (
         <div key={i} className="group">
           {group.map((cell, i) => (
@@ -30,6 +35,7 @@ export default function Board({ game }: BoardProps) {
           ))}
         </div>
       ))}
+      <div id="solved">Solved!</div>
     </div>
   );
 }
