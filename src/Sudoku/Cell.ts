@@ -12,11 +12,26 @@ export class Cell {
   private _value: number | undefined = undefined;
   private _notes: Note[];
 
-  readonly id: string;
   readonly game: Game;
   readonly lockUpdates = createDispatcher();
   readonly valueUpdates = createDispatcher();
   readonly noteUpdates = createDispatcher();
+
+  constructor(...groups: Group[]) {
+    this._groups = groups;
+    const { length } = (this.game = groups[0].game);
+    this._notes = Array.from({ length }, () => ({
+      alreadyUsed: 0,
+      unlikely: false,
+    }));
+    groups.forEach((g) => {
+      if (g.game !== this.game) throw new Error("Incompatible groups");
+      g.add(this, (action, value) => {
+        this._notes[value].alreadyUsed += action;
+        this.noteUpdates.dispatch();
+      });
+    });
+  }
 
   get locked(): boolean {
     return this._locked;
@@ -45,23 +60,6 @@ export class Cell {
         alreadyUsed ? "used" : unlikely ? "unlikely" : "possible",
       )
       .join("|");
-  }
-
-  constructor(id: string, ...groups: Group[]) {
-    this.id = id;
-    this._groups = groups;
-    const { length } = (this.game = groups[0].game);
-    this._notes = Array.from({ length }, () => ({
-      alreadyUsed: 0,
-      unlikely: false,
-    }));
-    groups.forEach((g) => {
-      if (g.game !== this.game) throw new Error("Incompatible groups");
-      g.add(this, (action, value) => {
-        this._notes[value].alreadyUsed += action;
-        this.noteUpdates.dispatch();
-      });
-    });
   }
 
   public lock(): void {

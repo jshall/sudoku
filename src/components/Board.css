@@ -1,22 +1,22 @@
-.board {
+#board {
   --size-note: calc(
     round(
       down,
-      (((100vmin - 2px) / var(--size) - 2px) / var(--size) - 4px) /
-        var(--size) - 2px,
+      (((100vmin - 2px) / var(--size-board) - 2px) / var(--size-board) - 4px) /
+        var(--size-board) - 2px,
       1px
     )
   );
-  --size-tile: calc(var(--size) * (var(--size-note) + 2px) + 2px);
+  --size-tile: calc(var(--size-board) * (var(--size-note) + 2px) + 2px);
   display: grid;
-  grid-template-rows: repeat(var(--size), 1fr);
-  grid-template-columns: repeat(var(--size), 1fr);
+  grid-template-rows: repeat(var(--size-board), 1fr);
+  grid-template-columns: repeat(var(--size-board), 1fr);
   border: solid white 1px;
   > .group {
     flex: 1;
     display: grid;
-    grid-template-rows: repeat(var(--size), 1fr);
-    grid-template-columns: repeat(var(--size), 1fr);
+    grid-template-rows: repeat(var(--size-board), 1fr);
+    grid-template-columns: repeat(var(--size-board), 1fr);
     border: solid white 1px;
     > .tile {
       border: solid gray 1px;
@@ -42,8 +42,8 @@
         display: grid;
         justify-content: center;
         align-items: center;
-        grid-template-rows: repeat(var(--size), 1fr);
-        grid-template-columns: repeat(var(--size), 1fr);
+        grid-template-rows: repeat(var(--size-board), 1fr);
+        grid-template-columns: repeat(var(--size-board), 1fr);
         padding: 2px;
         gap: 2px;
         > * {

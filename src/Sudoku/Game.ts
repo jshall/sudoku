@@ -6,7 +6,7 @@ export class Game {
   public readonly length: number;
   public readonly columns: readonly (readonly Cell[])[];
   public readonly rows: readonly (readonly Cell[])[];
-  public readonly squares: readonly (readonly Cell[])[];
+  public readonly blocks: readonly (readonly Cell[])[];
   public readonly tokens: readonly string[];
 
   constructor(size: number) {
@@ -16,11 +16,11 @@ export class Game {
 
     const columns: Group[] = (this.columns = []);
     const rows: Group[] = (this.rows = []);
-    const squares: Group[] = (this.squares = []);
+    const blocks: Group[] = (this.blocks = []);
     for (let i: number = 0; i < length; i++) {
       columns[i] = new Group(this);
       rows[i] = new Group(this);
-      squares[i] = new Group(this);
+      blocks[i] = new Group(this);
     }
 
     for (let yy: number = 0; yy < size; yy++) {
@@ -28,17 +28,15 @@ export class Game {
         for (let xx: number = 0; xx < size; xx++) {
           for (let x: number = 0; x < size; x++) {
             new Cell(
-              `c${x + xx * size}r${y + yy * size}s${xx + yy * size}`,
               columns[x + xx * size],
               rows[y + yy * size],
-              squares[xx + yy * size],
+              blocks[xx + yy * size],
             );
           }
         }
       }
     }
-
-    console.debug(this);
+    globalThis.game = this;
   }
 
   public clear(clearMarks: boolean = true, force: boolean = false): void {
@@ -76,10 +74,9 @@ export class Game {
   }
 
   public save() {
-    return this.rows
-      .flat()
-      .map((c) => (c.value === undefined ? "-" : this.tokens[c.value]))
-      .join("");
+    return this.rows.map((g) =>
+      g.map(({ value }) => this.tokens[value!] ?? "-"),
+    );
   }
   public load(data: string[][]) {
     this.clear(true, true);

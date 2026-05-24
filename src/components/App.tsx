@@ -1,6 +1,6 @@
 import "./App.css";
+import { Game } from "../Sudoku";
 import Board from "./Board";
-import { Game } from "./Sudoku";
 
 export default function App() {
   return (
