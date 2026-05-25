@@ -12,6 +12,8 @@
   grid-template-rows: repeat(var(--size-board), 1fr);
   grid-template-columns: repeat(var(--size-board), 1fr);
   border: var(--border-hard) 1px;
+  -webkit-user-select: none;
+  user-select: none;
   > .group {
     flex: 1;
     display: grid;

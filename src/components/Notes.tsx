@@ -8,24 +8,30 @@ export type NotesProps = {
 export function Notes({ notes, cell, setHighlight }: NotesProps) {
   return (
     <div className="notes">
-      {notes.map((note, i) => (
-        <div
-          key={i}
-          className={note}
-          onClick={() => {
-            if (note != "used") cell.value = i;
-          }}
-          onAuxClick={(e) => {
-            if (e.button == 1) cell.toggleNote(i);
-          }}
-          onContextMenuCapture={(e) => {
-            e.preventDefault();
-            setHighlight(i);
-          }}
-        >
-          {note != "used" ? cell.game.tokens[i] : ""}
-        </div>
-      ))}
+      {notes.map((note, i) => {
+        let clickTimer: number | undefined;
+        return (
+          <div
+            key={i}
+            className={note}
+            onClick={() => {
+              if (note != "used" && !clickTimer)
+                clickTimer = setTimeout(() => (cell.value = i), 250);
+            }}
+            onDoubleClick={() => {
+              clearTimeout(clickTimer);
+              clickTimer = undefined;
+              cell.toggleNote(i);
+            }}
+            onContextMenuCapture={(e) => {
+              e.preventDefault();
+              setHighlight(i);
+            }}
+          >
+            {note != "used" ? cell.game.tokens[i] : ""}
+          </div>
+        );
+      })}
     </div>
   );
 }
