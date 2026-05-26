@@ -1,37 +1,41 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { Game } from "../Sudoku";
 import "./Board.css";
 import { Tile } from "./Tile";
 
 export type BoardProps = { game: Game };
 export default function Board({ game }: BoardProps) {
-  const board = useRef<HTMLDivElement>(null);
-  const [highlight, setHiglight] = useState<number>();
+  const element = useRef<HTMLDivElement>(null);
 
   const solved = useSyncExternalStore(
     game.valueUpdates.subscribe,
     () => game.solved,
   );
 
-  useEffect(
-    () =>
-      board.current?.style.setProperty("--size-board", game.size.toString()),
-    [game.size],
-  );
+  useEffect(() => {
+    const g = game.size;
+    function resize() {
+      const b = Math.min(
+        window.visualViewport!.width,
+        window.visualViewport!.height,
+      );
+      const n = Math.floor((((b - 2) / g - 2) / g - 2) / g);
+      const t = g * n;
+      element.current?.style.setProperty("--width-note", `${n}px`);
+      element.current?.style.setProperty("--width-tile", `${t}px`);
+      element.current?.style.setProperty("--grid", `repeat(${g}, 1fr)`);
+    }
+    resize();
+    addEventListener("resize", resize);
+    return () => removeEventListener("resize", resize);
+  }, [game.size]);
 
   return (
-    <div id="board" className={solved ? "solved" : undefined} ref={board}>
+    <div id="board" className={solved ? "solved" : undefined} ref={element}>
       {game.blocks.map((group, i) => (
-        <div key={i} className="group">
+        <div key={i}>
           {group.map((cell, i) => (
-            <Tile
-              key={i}
-              cell={cell}
-              highlight={highlight}
-              setHighlight={(value: number) =>
-                setHiglight(highlight === value ? undefined : value)
-              }
-            />
+            <Tile key={i} cell={cell} />
           ))}
         </div>
       ))}

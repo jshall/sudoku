@@ -1,0 +1,10 @@
+#root > button {
+  position: absolute;
+  top: 4px;
+  &.new {
+    left: 4px;
+  }
+  &.save {
+    right: 4px;
+  }
+}

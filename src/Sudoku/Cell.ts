@@ -9,7 +9,7 @@ export type Note = {
 export class Cell {
   private _groups: Group[];
   private _locked: boolean = false;
-  private _value: number | undefined = undefined;
+  private _value: number | null = null;
   private _notes: Note[];
 
   readonly game: Game;
@@ -36,20 +36,19 @@ export class Cell {
   get locked(): boolean {
     return this._locked;
   }
-  get value(): number | undefined {
+  get value(): number | null {
     return this._value;
   }
-  set value(value: number | null | undefined) {
+  set value(value: number | null) {
     if (this._locked) throw Error("You may not change this tile.");
-    if (value === null) value = undefined;
-    if (value === this._value) return;
-    if (value !== undefined) {
+    if ((value ?? null) === this._value) return;
+    if (typeof value === "number") {
       this.game.validate(value);
       if (this._notes[value].alreadyUsed)
         throw Error("This value has already been eliminated.");
     }
     this._groups.forEach(({ updateUsage }) => {
-      updateUsage(value === undefined ? -1 : 1, value ?? this._value!);
+      updateUsage(value === null ? -1 : 1, value ?? this._value!);
     });
     this._value = value;
     this.valueUpdates.dispatch();
@@ -64,7 +63,7 @@ export class Cell {
   }
 
   public lock(): void {
-    if (this._value !== undefined) {
+    if (this._value !== null) {
       this._locked = true;
       this.lockUpdates.dispatch();
     }

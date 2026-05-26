@@ -1,28 +1,29 @@
-import type { Cell } from "../Sudoku";
+import { useSyncExternalStore } from "react";
+import type { TileProps } from "./Tile";
 
-type NewType = {
-  locked: boolean;
-  cell: Cell;
-  setHighlight: (value: number) => void;
-  value: number;
-};
-export function TileValue({ locked, cell, setHighlight, value }: NewType) {
+export function TileValue({ cell }: TileProps) {
+  const locked = useSyncExternalStore(
+    cell.lockUpdates.subscribe,
+    () => cell.locked,
+  );
+  const highlight = useSyncExternalStore(
+    cell.game.highlightUpdates.subscribe,
+    () => cell.game.highlight,
+  );
   return (
     <div
-      className={`value ${locked ? "locked" : ""}`}
-      onClick={() => {
+      className={`value${locked ? " locked" : ""}${cell.value == highlight ? " highlight" : ""}`}
+      onContextMenu={() => {
         // eslint-disable-next-line react-hooks/immutability
-        if (!locked) cell.value = undefined;
+        if (!locked) cell.value = null;
       }}
-      onAuxClick={(e) => {
-        if (e.button == 1) cell.lock();
-      }}
-      onContextMenuCapture={(e) => {
+      onClick={(e) => {
         e.preventDefault();
-        setHighlight(value);
+        // eslint-disable-next-line react-hooks/immutability
+        cell.game.highlight = cell.value;
       }}
     >
-      {cell.game.tokens[value]}
+      {cell.game.tokens[cell.value!]}
     </div>
   );
 }

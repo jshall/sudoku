@@ -3,16 +3,21 @@ import { createDispatcher } from "./Dispatcher";
 import { Group } from "./Group";
 
 export class Game {
+  private _higlight: number | null = null;
+
   public readonly size: number;
   public readonly length: number;
   public readonly columns: readonly (readonly Cell[])[];
   public readonly rows: readonly (readonly Cell[])[];
   public readonly blocks: readonly (readonly Cell[])[];
   public readonly tokens: readonly string[];
-  public readonly valueUpdates = createDispatcher();
 
-  constructor(size: number) {
-    this.size = size;
+  public readonly valueUpdates = createDispatcher();
+  public readonly highlightUpdates = createDispatcher();
+
+  constructor(init: number | [string[][], string[][]?]) {
+    const size = (this.size =
+      typeof init === "number" ? init : Math.sqrt(init[0].length));
     const length = (this.length = size * size);
     this.tokens = getTokens(size);
 
@@ -38,20 +43,28 @@ export class Game {
         }
       }
     }
-    globalThis.game = this;
+    if (typeof init !== "number") this.load(...init);
   }
 
   public get solved() {
-    return this.rows.every((r) => r.every((c) => c.value !== undefined));
+    return this.rows.every((r) => r.every((c) => c.value !== null));
+  }
+  public get highlight() {
+    return this._higlight;
+  }
+  public set highlight(value) {
+    this._higlight = value === this._higlight ? null : value;
+    this.highlightUpdates.dispatch();
   }
 
   public clear(clearMarks: boolean = true, force: boolean = false): void {
+    this._higlight = null;
     this.columns.forEach((row) => {
       row.forEach((tile) => {
         // @ts-expect-error accessing private _locked
         if (force) tile._locked = false;
         if (!tile.locked) {
-          tile.value = undefined;
+          tile.value = null;
         }
         if (clearMarks) {
           for (let i = 0; i < this.length; i++) {
@@ -60,11 +73,12 @@ export class Game {
         }
       });
     });
+    this.highlightUpdates.dispatch();
   }
   public lock(): void {
     this.columns.forEach((group) =>
       group.forEach((cell) => {
-        if (cell.value !== undefined) {
+        if (cell.value !== null) {
           cell.lock();
         }
       }),
@@ -80,17 +94,36 @@ export class Game {
   }
 
   public save() {
-    return this.rows.map((g) =>
-      g.map(({ value }) => this.tokens[value!] ?? "-"),
-    );
+    return [
+      this.rows.map((g) =>
+        g.map(
+          ({ value, locked }) =>
+            (locked ? this.tokens[value!] : undefined) ?? "-",
+        ),
+      ),
+      this.rows.map((g) =>
+        g.map(
+          ({ value, locked }) =>
+            (!locked ? this.tokens[value!] : undefined) ?? "-",
+        ),
+      ),
+    ];
   }
-  public load(data: string[][]) {
+  public load(pen: string[][], pencil?: string[][]) {
     this.clear(true, true);
     const tokenValues = Object.fromEntries(this.tokens.map((t, v) => [t, v]));
     this.rows.forEach((row, r) =>
-      row.forEach((cell, c) => (cell.value = tokenValues[data[r][c]])),
+      row.forEach((cell, c) => {
+        cell.value = tokenValues[pen[r][c]];
+      }),
     );
     this.lock();
+    if (pencil)
+      this.rows.forEach((row, r) =>
+        row.forEach((cell, c) => {
+          if (!cell.locked) cell.value = tokenValues[pencil[r][c]];
+        }),
+      );
   }
 }
 

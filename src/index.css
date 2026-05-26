@@ -1,20 +1,23 @@
 :root {
   --bg: #fff;
-  --pen: #08060d;
-  --pencil: #aaa;
+  --pen: #0300c5;
+  --pencil: #4d4d4d;
+  --text: #6b6375;
+  --accent: #aa3bff;
   --border-hard: solid black;
   --border-soft: solid gray;
-  --highlight: rgba(255, 252, 59, 0.288);
+  --highlight: #fffc3b49;
   --code-bg: #f4f3ec;
 
   --sans: system-ui, "Segoe UI", Roboto, sans-serif;
   --heading: system-ui, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
+  --handwritten: "Designer Notes", sans-serif;
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
   color-scheme: light dark;
-  color: var(--pen);
+  color: var(--text);
   background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -29,11 +32,13 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #16171d;
-    --pen: #f3f4f6;
-    --pencil: #666;
+    --pen: #6966ff;
+    --pencil: #cccccc;
+    --text: #9ca3af;
+    --accent: #c084fc;
     --border-hard: solid white;
     --border-soft: solid gray;
-    --highlight: rgb(248 244 0 / 18%);
+    --highlight: rgba(255, 255, 255, 0.18);
     --code-bg: #1f2028;
   }
 }
@@ -56,7 +61,7 @@ h1,
 h2 {
   font-family: var(--heading);
   font-weight: 500;
-  color: var(--pencil);
+  color: var(--accent);
 }
 
 h1 {
@@ -86,7 +91,7 @@ code,
   font-family: var(--mono);
   display: inline-flex;
   border-radius: 4px;
-  color: var(--pencil);
+  color: var(--accent);
 }
 
 code {

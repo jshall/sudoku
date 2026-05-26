@@ -1,69 +1,57 @@
-#board {
-  --size-note: calc(
-    round(
-      down,
-      (((100vmin - 2px) / var(--size-board) - 2px) / var(--size-board) - 4px) /
-        var(--size-board) - 2px,
-      1px
-    )
-  );
-  --size-tile: calc(var(--size-board) * (var(--size-note) + 2px) + 2px);
+#board,
+#board > :not(#solved),
+#board .notes {
   display: grid;
-  grid-template-rows: repeat(var(--size-board), 1fr);
-  grid-template-columns: repeat(var(--size-board), 1fr);
+  align-items: center;
+  justify-content: center;
+  grid-template-rows: var(--grid);
+  grid-template-columns: var(--grid);
+  > * {
+    flex: 1;
+  }
+}
+.value,
+.notes > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#board {
   border: var(--border-hard) 1px;
+
   -webkit-user-select: none;
   user-select: none;
-  > .group {
-    flex: 1;
-    display: grid;
-    grid-template-rows: repeat(var(--size-board), 1fr);
-    grid-template-columns: repeat(var(--size-board), 1fr);
+  > :not(#solved) {
     border: var(--border-hard) 1px;
-    > .tile {
-      color: var(--pencil);
+
+    color: var(--pencil);
+    font-family: var(--handwritten);
+    > * {
       border: var(--border-soft) 1px;
+
       &.highlight {
         background: var(--highlight);
       }
-      > .value {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: calc(var(--size-tile));
-        height: calc(var(--size-tile));
-        font-size: calc(0.8 * var(--size-tile));
-        font-weight: bold;
-        font-family: var(--mono);
+      &.value {
+        width: var(--width-tile, 1px);
+        height: var(--width-tile, 1px);
+        font-size: var(--width-tile, 1px);
         cursor: pointer;
         &.locked {
           color: var(--pen);
           cursor: default;
         }
       }
-      > .notes {
-        flex: 1;
-        display: grid;
-        justify-content: center;
-        align-items: center;
-        grid-template-rows: repeat(var(--size-board), 1fr);
-        grid-template-columns: repeat(var(--size-board), 1fr);
-        padding: 2px;
-        gap: 2px;
-        > * {
-          width: var(--size-note);
-          height: var(--size-note);
-          font-size: var(--size-note);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          &.possible,
-          &.unlikely {
-            cursor: crosshair;
-            &.unlikely {
-              color: rgb(from var(--pencil) r g b / 0.4);
-            }
-          }
+      &.notes > * {
+        width: var(--width-note, 1px);
+        height: var(--width-note, 1px);
+        font-size: var(--width-note, 1px);
+        &.possible,
+        &.unlikely {
+          cursor: crosshair;
+        }
+        &.unlikely {
+          color: rgb(from var(--pencil) r g b / 0.2);
         }
       }
     }
@@ -77,6 +65,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
 
+    color: var(--accent);
     line-height: normal;
     padding: 0.2em 0.6em;
     font-size: 20vmin;
