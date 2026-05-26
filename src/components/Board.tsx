@@ -1,6 +1,6 @@
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { Game } from "../Sudoku";
-import "./Board.css";
+import { cx } from "../utils";
 import { Tile } from "./Tile";
 
 export type BoardProps = { game: Game };
@@ -31,15 +31,15 @@ export default function Board({ game }: BoardProps) {
   }, [game.size]);
 
   return (
-    <div id="board" className={solved ? "solved" : undefined} ref={element}>
+    <div className={cx("board grid", { solved })} ref={element}>
       {game.blocks.map((group, i) => (
-        <div key={i}>
+        <div key={i} className={cx("block grid")}>
           {group.map((cell, i) => (
             <Tile key={i} cell={cell} />
           ))}
         </div>
       ))}
-      <div id="solved">Solved!</div>
+      <div className={"solved"}>Solved!</div>
     </div>
   );
 }

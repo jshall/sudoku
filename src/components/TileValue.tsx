@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { cx } from "../utils";
 import type { TileProps } from "./Tile";
 
 export function TileValue({ cell }: TileProps) {
@@ -12,13 +13,16 @@ export function TileValue({ cell }: TileProps) {
   );
   return (
     <div
-      className={`value${locked ? " locked" : ""}${cell.value == highlight ? " highlight" : ""}`}
-      onContextMenu={() => {
+      className={cx("tile flex value", {
+        locked,
+        highlight: cell.value === highlight,
+      })}
+      onContextMenu={(e) => {
+        e.preventDefault();
         // eslint-disable-next-line react-hooks/immutability
         if (!locked) cell.value = null;
       }}
-      onClick={(e) => {
-        e.preventDefault();
+      onClick={() => {
         // eslint-disable-next-line react-hooks/immutability
         cell.game.highlight = cell.value;
       }}

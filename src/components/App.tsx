@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from "react";
 import { Game } from "../Sudoku";
-import "./App.css";
 import Board from "./Board";
 
 export default function App() {

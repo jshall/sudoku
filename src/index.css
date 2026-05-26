@@ -100,3 +100,102 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+#root > button {
+  position: absolute;
+  top: 4px;
+  &.new {
+    left: 4px;
+  }
+  &.save {
+    right: 4px;
+  }
+}
+
+.grid {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  grid-template-rows: var(--grid);
+  grid-template-columns: var(--grid);
+  > * {
+    flex: 1;
+  }
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board {
+  border: var(--border-hard) 1px;
+
+  -webkit-user-select: none;
+  user-select: none;
+
+  > .solved {
+    display: none;
+    pointer-events: none;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    color: var(--accent);
+    line-height: normal;
+    padding: 0.2em 0.6em;
+    font-size: 20vmin;
+
+    background: radial-gradient(
+      ellipse,
+      rgb(from var(--bg) r g b / 0.8) 55%,
+      #fff0 70%
+    );
+
+    .solved > & {
+      display: block;
+    }
+  }
+}
+
+.block {
+  border: var(--border-hard) 1px;
+
+  color: var(--pencil);
+  font-family: var(--mono);
+}
+
+.tile {
+  border: var(--border-soft) 1px;
+
+  &.highlight {
+    background: var(--highlight);
+  }
+}
+
+.value {
+  width: var(--width-tile, 1px);
+  height: var(--width-tile, 1px);
+  font-size: var(--width-tile, 1px);
+  cursor: pointer;
+  &.locked {
+    color: var(--pen);
+    cursor: default;
+  }
+}
+
+.note {
+  width: var(--width-note, 1px);
+  height: var(--width-note, 1px);
+  font-size: var(--width-note, 1px);
+  &.possible,
+  &.unlikely {
+    cursor: crosshair;
+  }
+  &.unlikely {
+    color: rgb(from var(--pencil) r g b / 0.2);
+  }
+}
