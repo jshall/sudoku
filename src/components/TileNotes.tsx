@@ -1,20 +1,11 @@
-import { useMemo, useSyncExternalStore, type MouseEvent } from "react";
+import { useContext, useMemo, type MouseEvent } from "react";
 import { cx } from "../utils";
-import type { TileProps } from "./Tile";
+import { TileContext } from "./TileContext";
+import { AppContext } from "./AppContext";
 
-export function Notes({ cell }: TileProps) {
-  const highlightValue = useSyncExternalStore(
-    cell.game.highlightUpdates.subscribe,
-    () => cell.game.highlight,
-  );
-  const noteString = useSyncExternalStore(
-    cell.noteUpdates.subscribe,
-    () => cell.notes,
-  );
-  const notes = useMemo(
-    () => noteString.split("|") as ("used" | "unlikely" | "possible")[],
-    [noteString],
-  );
+export function TileNotes() {
+  const { game, highlightValue, setHighlightValue } = useContext(AppContext)!;
+  const { cell, notes } = useContext(TileContext)!;
   const highlight = useMemo(
     () => highlightValue !== null && notes[highlightValue] === "possible",
     [highlightValue, notes],
@@ -36,7 +27,7 @@ export function Notes({ cell }: TileProps) {
           },
           onContextMenu(e: MouseEvent) {
             e.preventDefault();
-            cell.game.highlight = i;
+            setHighlightValue(i);
           },
         };
   }
@@ -45,7 +36,7 @@ export function Notes({ cell }: TileProps) {
     <div className={cx("tile grid", { highlight })}>
       {notes.map((note, i) => (
         <div key={i} className={cx("note flex", note)} {...events(i)}>
-          {note === "used" ? "" : cell.game.tokens[i]}
+          {note === "used" ? "" : game.tokens[i]}
         </div>
       ))}
     </div>

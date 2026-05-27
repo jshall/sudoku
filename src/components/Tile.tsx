@@ -1,15 +1,14 @@
-import { useSyncExternalStore } from "react";
 import type { Cell } from "../Sudoku";
-import { Notes } from "./Notes";
+import { TileNotes } from "./TileNotes";
 import { TileValue } from "./TileValue";
+import { TileContext, useCellContext } from "./TileContext";
 
 export type TileProps = { cell: Cell };
-export function Tile(props: TileProps) {
-  const { cell } = props;
-  const value = useSyncExternalStore(
-    cell.valueUpdates.subscribe,
-    () => cell.value,
+export function Tile({ cell }: TileProps) {
+  const ctx = useCellContext(cell);
+  return (
+    <TileContext value={ctx}>
+      {ctx.value === null ? <TileNotes /> : <TileValue />}
+    </TileContext>
   );
-
-  return value === null ? <Notes {...props} /> : <TileValue {...props} />;
 }

@@ -1,16 +1,11 @@
-import { useEffect, useRef, useSyncExternalStore } from "react";
-import { Game } from "../Sudoku";
+import { useContext, useEffect, useRef } from "react";
 import { cx } from "../utils";
 import { Tile } from "./Tile";
+import { AppContext } from "./AppContext";
 
-export type BoardProps = { game: Game };
-export default function Board({ game }: BoardProps) {
+export default function Board() {
   const element = useRef<HTMLDivElement>(null);
-
-  const solved = useSyncExternalStore(
-    game.valueUpdates.subscribe,
-    () => game.solved,
-  );
+  const { game, solved } = useContext(AppContext)!;
 
   useEffect(() => {
     const g = game.size;

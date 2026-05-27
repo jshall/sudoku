@@ -1,21 +1,16 @@
-import { useSyncExternalStore } from "react";
+import { useContext } from "react";
 import { cx } from "../utils";
-import type { TileProps } from "./Tile";
+import { AppContext } from "./AppContext";
+import { TileContext } from "./TileContext";
 
-export function TileValue({ cell }: TileProps) {
-  const locked = useSyncExternalStore(
-    cell.lockUpdates.subscribe,
-    () => cell.locked,
-  );
-  const highlight = useSyncExternalStore(
-    cell.game.highlightUpdates.subscribe,
-    () => cell.game.highlight,
-  );
+export function TileValue() {
+  const { game, highlightValue, setHighlightValue } = useContext(AppContext)!;
+  const { cell, value, locked } = useContext(TileContext)!;
   return (
     <div
       className={cx("tile flex value", {
         locked,
-        highlight: cell.value === highlight,
+        highlight: cell.value === highlightValue,
       })}
       onContextMenu={(e) => {
         e.preventDefault();
@@ -23,11 +18,10 @@ export function TileValue({ cell }: TileProps) {
         if (!locked) cell.value = null;
       }}
       onClick={() => {
-        // eslint-disable-next-line react-hooks/immutability
-        cell.game.highlight = cell.value;
+        setHighlightValue(value);
       }}
     >
-      {cell.game.tokens[cell.value!]}
+      {game.tokens[value!]}
     </div>
   );
 }

@@ -3,17 +3,13 @@ import { createDispatcher } from "./Dispatcher";
 import { Group } from "./Group";
 
 export class Game {
-  private _higlight: number | null = null;
-
   public readonly size: number;
   public readonly length: number;
   public readonly columns: readonly (readonly Cell[])[];
   public readonly rows: readonly (readonly Cell[])[];
   public readonly blocks: readonly (readonly Cell[])[];
   public readonly tokens: readonly string[];
-
   public readonly valueUpdates = createDispatcher();
-  public readonly highlightUpdates = createDispatcher();
 
   constructor(init: number | [string[][], string[][]?]) {
     const size = (this.size =
@@ -49,16 +45,8 @@ export class Game {
   public get solved() {
     return this.rows.every((r) => r.every((c) => c.value !== null));
   }
-  public get highlight() {
-    return this._higlight;
-  }
-  public set highlight(value) {
-    this._higlight = value === this._higlight ? null : value;
-    this.highlightUpdates.dispatch();
-  }
 
   public clear(clearMarks: boolean = true, force: boolean = false): void {
-    this._higlight = null;
     this.columns.forEach((row) => {
       row.forEach((tile) => {
         // @ts-expect-error accessing private _locked
@@ -73,7 +61,6 @@ export class Game {
         }
       });
     });
-    this.highlightUpdates.dispatch();
   }
   public lock(): void {
     this.columns.forEach((group) =>
