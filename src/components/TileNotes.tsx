@@ -1,42 +1,55 @@
-import { useContext, useMemo, type MouseEvent } from "react";
+import { useContext, useMemo, type UIEvent } from "react";
 import { cx } from "../utils";
 import { TileContext } from "./TileContext";
 import { AppContext } from "./AppContext";
 
 export function TileNotes() {
-  const { game, highlightValue, setHighlightValue } = useContext(AppContext)!;
-  const { cell, notes } = useContext(TileContext)!;
+  const { highlightValue, tokens } = useContext(AppContext)!;
+  const { cell, notes, mustBe } = useContext(TileContext)!;
   const highlight = useMemo(
     () => highlightValue !== null && notes[highlightValue] === "possible",
     [highlightValue, notes],
   );
-
-  function events(i: number) {
-    let clickTimer: number | null;
-    return notes[i] === "used"
-      ? {}
-      : {
+  const events = useMemo(() => {
+    const base =
+      highlightValue !== null && notes[highlightValue] !== "used"
+        ? {
+            onContextMenu(e: UIEvent) {
+              e.preventDefault();
+              cell.toggleNote(highlightValue!);
+            },
+          }
+        : {};
+    return highlight
+      ? {
+          ...base,
           onClick() {
-            if (!clickTimer)
-              clickTimer = setTimeout(() => (cell.value = i), 250);
+            // eslint-disable-next-line react-hooks/immutability
+            cell.value = highlightValue;
           },
-          onDoubleClick() {
-            clearTimeout(clickTimer!);
-            clickTimer = null;
-            cell.toggleNote(i);
-          },
-          onContextMenu(e: MouseEvent) {
-            e.preventDefault();
-            setHighlightValue(i);
-          },
-        };
-  }
+        }
+      : mustBe !== null
+        ? {
+            ...base,
+            onClick() {
+              // eslint-disable-next-line react-hooks/immutability
+              cell.value = mustBe;
+            },
+          }
+        : base;
+  }, [cell, highlight, highlightValue, notes, mustBe]);
 
   return (
-    <div className={cx("tile grid", { highlight })}>
+    <div
+      className={cx("tile grid", {
+        clickable: "onClick" in events || "onContextMenu" in events,
+        highlight,
+      })}
+      {...events}
+    >
       {notes.map((note, i) => (
-        <div key={i} className={cx("note flex", note)} {...events(i)}>
-          {note === "used" ? "" : game.tokens[i]}
+        <div key={i} className={cx("note flex", note)}>
+          {note === "used" ? "" : tokens[i].token}
         </div>
       ))}
     </div>

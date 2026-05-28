@@ -51,6 +51,9 @@
   justify-content: center;
   flex-direction: column;
   box-sizing: border-box;
+  &.landscape {
+    flex-direction: row;
+  }
 }
 
 body {
@@ -101,14 +104,46 @@ code {
   background: var(--code-bg);
 }
 
-#root > button {
-  position: absolute;
-  top: 4px;
-  &.new {
-    left: 4px;
+.clickable {
+  cursor: pointer;
+}
+
+#tokens {
+  color: var(--pencil);
+  .landscape & {
+    flex-direction: column;
+    height: 100svh;
   }
-  &.save {
-    right: 4px;
+  .portrait & {
+    flex-direction: row;
+    width: 100svw;
+  }
+  > * {
+    flex: 1;
+    position: relative;
+    container: size;
+    &.highlight {
+      background: radial-gradient(var(--highlight) 50%, #fff0 85%);
+    }
+    > .token {
+      text-align: center;
+      font-size: calc(0.7 * var(--width-tile));
+      line-height: calc(0.7 * var(--width-tile));
+      .landscape & {
+        width: calc(0.7 * var(--width-tile));
+      }
+      .portrait & {
+        height: calc(0.7 * var(--width-tile));
+      }
+    }
+    > .count {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+    }
+    &.buttons {
+      gap: 0.4em;
+    }
   }
 }
 
@@ -127,13 +162,19 @@ code {
   display: flex;
   justify-content: center;
   align-items: center;
+  &.column {
+    flex-direction: column;
+  }
+}
+
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .board {
+  position: relative;
   border: var(--border-hard) 1px;
-
-  -webkit-user-select: none;
-  user-select: none;
 
   > .solved {
     display: none;
@@ -180,10 +221,8 @@ code {
   width: var(--width-tile, 1px);
   height: var(--width-tile, 1px);
   font-size: var(--width-tile, 1px);
-  cursor: pointer;
   &.locked {
     color: var(--pen);
-    cursor: default;
   }
 }
 
@@ -191,10 +230,6 @@ code {
   width: var(--width-note, 1px);
   height: var(--width-note, 1px);
   font-size: var(--width-note, 1px);
-  &.possible,
-  &.unlikely {
-    cursor: crosshair;
-  }
   &.unlikely {
     color: rgb(from var(--pencil) r g b / 0.2);
   }

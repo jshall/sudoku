@@ -47,12 +47,14 @@ export class Cell {
       if (this._notes[value].alreadyUsed)
         throw Error("This value has already been eliminated.");
     }
-    this._groups.forEach(({ updateUsage }) => {
-      updateUsage(value === null ? -1 : 1, value ?? this._value!);
-    });
+    const params = [value === null ? -1 : 1, value ?? this._value!] as const;
     this._value = value;
+    this.game.tokens[params[1]].count += params[0];
     this.valueUpdates.dispatch();
     this.game.valueUpdates.dispatch();
+    this._groups.forEach((group) => {
+      group.updateUsage(...params);
+    });
   }
   get notes() {
     return this._notes

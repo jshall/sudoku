@@ -18,8 +18,14 @@ export function useCellContext(cell: Cell) {
     () => noteString.split("|") as ("used" | "unlikely" | "possible")[],
     [noteString],
   );
+  const mustBe = useMemo(() => {
+    const possible = notes
+      .map((n, i) => (n === "possible" ? i : null))
+      .filter((i) => i !== null);
+    return possible.length === 1 ? possible[0] : null;
+  }, [notes]);
 
-  return { cell, value, locked, notes };
+  return { cell, value, locked, notes, mustBe };
 }
 
 export const TileContext = createContext<ReturnType<

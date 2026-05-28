@@ -15,8 +15,10 @@ export function useAppContext(game: Game) {
     game.valueUpdates.subscribe,
     () => game.solved,
   );
+  const [tokens, setTokens] = useState(game.tokens);
 
   function newGame(game: Game) {
+    setHighlightValue(null);
     if (game.size === 3)
       fetch("https://sudoku-api.vercel.app/api/dosuku")
         .then((res) => res.json())
@@ -35,7 +37,16 @@ export function useAppContext(game: Game) {
 
   useEffect(() => {
     window.game = game;
-  }, [game]);
+    return game.valueUpdates.subscribe(() => setTokens([...game.tokens]));
+  }, [game, game.size]);
 
-  return { game, highlightValue, setHighlightValue, solved, newGame, saveGame };
+  return {
+    game,
+    highlightValue,
+    setHighlightValue,
+    solved,
+    tokens,
+    newGame,
+    saveGame,
+  };
 }

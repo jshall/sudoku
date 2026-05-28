@@ -8,14 +8,14 @@ export class Game {
   public readonly columns: readonly (readonly Cell[])[];
   public readonly rows: readonly (readonly Cell[])[];
   public readonly blocks: readonly (readonly Cell[])[];
-  public readonly tokens: readonly string[];
+  public readonly tokens: readonly { token: string; count: number }[];
   public readonly valueUpdates = createDispatcher();
 
   constructor(init: number | [string[][], string[][]?]) {
     const size = (this.size =
       typeof init === "number" ? init : Math.sqrt(init[0].length));
     const length = (this.length = size * size);
-    this.tokens = getTokens(size);
+    this.tokens = getTokens(size).map((token) => ({ token, count: 0 }));
 
     const columns: Group[] = (this.columns = []);
     const rows: Group[] = (this.rows = []);
@@ -85,20 +85,22 @@ export class Game {
       this.rows.map((g) =>
         g.map(
           ({ value, locked }) =>
-            (locked ? this.tokens[value!] : undefined) ?? "-",
+            (locked ? this.tokens[value!].token : undefined) ?? "-",
         ),
       ),
       this.rows.map((g) =>
         g.map(
           ({ value, locked }) =>
-            (!locked ? this.tokens[value!] : undefined) ?? "-",
+            (!locked ? this.tokens[value!].token : undefined) ?? "-",
         ),
       ),
     ];
   }
   public load(pen: string[][], pencil?: string[][]) {
     this.clear(true, true);
-    const tokenValues = Object.fromEntries(this.tokens.map((t, v) => [t, v]));
+    const tokenValues = Object.fromEntries(
+      this.tokens.map(({ token }, v) => [token, v]),
+    );
     this.rows.forEach((row, r) =>
       row.forEach((cell, c) => {
         cell.value = tokenValues[pen[r][c]];
