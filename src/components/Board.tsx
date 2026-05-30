@@ -7,7 +7,7 @@ export default function Board() {
   const { game, solved } = useContext(AppContext)!;
 
   return (
-    <div className={cx("board grid no-select", { solved })}>
+    <div className={cx("board grid", { solved })}>
       {game.blocks.map((group, i) => (
         <div key={i} className={cx("block grid")}>
           {group.map((cell, i) => (

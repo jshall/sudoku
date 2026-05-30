@@ -19,7 +19,7 @@ export function Tokens() {
       {tokens.map(({ token, count }, i) => (
         <div
           key={i}
-          className={cx("flex no-select clickable", {
+          className={cx("flex clickable", {
             highlight: highlightValue === i,
           })}
           onClick={() => setHighlightValue((v) => (i === v ? null : i))}

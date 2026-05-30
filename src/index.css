@@ -54,6 +54,8 @@
   &.landscape {
     flex-direction: row;
   }
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 body {
@@ -143,6 +145,7 @@ code {
     }
     &.buttons {
       gap: 0.4em;
+      padding: 0.4em;
     }
   }
 }
@@ -165,11 +168,6 @@ code {
   &.column {
     flex-direction: column;
   }
-}
-
-.no-select {
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 .board {
