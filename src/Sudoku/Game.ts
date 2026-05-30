@@ -91,7 +91,8 @@ export class Game {
       this.rows.map((g) =>
         g.map(
           ({ value, locked }) =>
-            (!locked ? this.tokens[value!].token : undefined) ?? "-",
+            (locked || value === null ? undefined : this.tokens[value].token) ??
+            "-",
         ),
       ),
     ];
