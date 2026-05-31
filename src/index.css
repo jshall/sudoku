@@ -38,7 +38,7 @@
     --accent: #c084fc;
     --border-hard: solid white;
     --border-soft: solid gray;
-    --highlight: rgba(255, 255, 255, 0.18);
+    --highlight: #4570b66e;
     --code-bg: #1f2028;
   }
 }
@@ -120,33 +120,28 @@ code {
     flex-direction: row;
     width: 100svw;
   }
-  > * {
+  > :has(.token) {
     flex: 1;
     position: relative;
     container: size;
+    text-align: center;
+    font-size: calc(0.7 * var(--width-tile));
+    line-height: normal;
     &.highlight {
       background: radial-gradient(var(--highlight) 50%, #fff0 85%);
     }
-    > .token {
-      text-align: center;
-      font-size: calc(0.7 * var(--width-tile));
-      line-height: calc(0.7 * var(--width-tile));
-      .landscape & {
-        width: calc(0.7 * var(--width-tile));
-      }
-      .portrait & {
-        height: calc(0.7 * var(--width-tile));
-      }
-    }
     > .count {
+      font-size: 0.3em;
       position: absolute;
-      bottom: 2px;
-      right: 2px;
+      top: 50%;
+      left: 50%;
+      transform: translate(160%, 50%);
     }
-    &.buttons {
-      gap: 0.4em;
-      padding: 0.4em;
-    }
+  }
+  > .buttons {
+    flex: 0;
+    gap: 0.4em;
+    padding: 0.4em;
   }
 }
 

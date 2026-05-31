@@ -4,14 +4,18 @@ import { AppContext } from "./AppContext";
 import { TileContext } from "./TileContext";
 
 export function TileValue() {
-  const { highlightValue, setHighlightValue, tokens } = useContext(AppContext)!;
+  const { highlightValue, game, setHighlightValue, tokens } =
+    useContext(AppContext)!;
   const { cell, value, locked } = useContext(TileContext)!;
   const events = useMemo(() => {
-    const base = {
-      onClick() {
-        setHighlightValue((val) => (val === value ? null : value));
-      },
-    };
+    const base =
+      tokens[value!].count === game.length
+        ? {}
+        : {
+            onClick() {
+              setHighlightValue((val) => (val === value ? null : value));
+            },
+          };
     return locked
       ? base
       : {
@@ -22,7 +26,7 @@ export function TileValue() {
             cell.value = null;
           },
         };
-  }, [cell, locked, setHighlightValue, value]);
+  }, [cell, game.length, locked, setHighlightValue, tokens, value]);
   return (
     <div
       className={cx("tile flex value", {

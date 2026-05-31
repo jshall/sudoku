@@ -36,9 +36,14 @@ export function useAppContext(game: Game) {
     window.game = game;
     return game.valueUpdates.subscribe(() => {
       setTokens([...game.tokens]);
+      if (
+        highlightValue !== null &&
+        game.tokens[highlightValue].count === game.length
+      )
+        setHighlightValue(null);
       localStorage.setItem("gameState", game.save());
     });
-  }, [game, game.size]);
+  }, [game, game.size, highlightValue]);
 
   return {
     game,
