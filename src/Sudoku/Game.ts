@@ -11,10 +11,10 @@ export class Game {
   public readonly tokens: readonly { token: string; count: number }[];
   public readonly valueUpdates = createDispatcher();
 
-  constructor(init: number | [string[][], string[][]?]) {
-    const size = (this.size =
-      typeof init === "number" ? init : Math.sqrt(init[0].length));
-    const length = (this.length = size * size);
+  constructor(init: number | string) {
+    const { size, length, data } = parseInit(init);
+    this.size = size;
+    this.length = length;
     this.tokens = getTokens(size).map((token) => ({ token, count: 0 }));
 
     const columns: Group[] = (this.columns = []);
@@ -39,7 +39,7 @@ export class Game {
         }
       }
     }
-    if (typeof init !== "number") this.load(...init);
+    if (data) this.load(data);
   }
 
   public get solved() {
@@ -80,41 +80,80 @@ export class Game {
     }
   }
 
-  public save() {
-    return [
-      this.rows.map((g) =>
-        g.map(
-          ({ value, locked }) =>
-            (locked ? this.tokens[value!].token : undefined) ?? "-",
-        ),
-      ),
-      this.rows.map((g) =>
-        g.map(
-          ({ value, locked }) =>
-            (locked || value === null ? undefined : this.tokens[value].token) ??
-            "-",
-        ),
-      ),
-    ];
-  }
-  public load(pen: string[][], pencil?: string[][]) {
-    this.clear(true, true);
-    const tokenValues = Object.fromEntries(
-      this.tokens.map(({ token }, v) => [token, v]),
-    );
-    this.rows.forEach((row, r) =>
-      row.forEach((cell, c) => {
-        cell.value = tokenValues[pen[r][c]];
+  public save(): string {
+    const { cellBits } = getDataInfo(this.size);
+    let bitString = "";
+    this.rows.forEach((row) =>
+      row.forEach(({ locked, value }) => {
+        bitString += locked ? "1" : "0";
+        bitString += bits((value ?? -1) + 1, cellBits - 1);
       }),
     );
-    this.lock();
-    if (pencil)
+    return new Uint8Array(
+      bitString.match(/.{1,8}/g)!.map((s) => parseInt(s.padEnd(8, "0"), 2)),
+    ).toBase64({ alphabet: "base64url", omitPadding: true });
+  }
+  public load(data: string | string[][]) {
+    if (typeof data === "string") {
+      const { length, cellBits } = getDataInfo(data);
+      const bitSring = [...Uint8Array.fromBase64(data)]
+        .map((b) => bits(b, 8))
+        .join("");
+      const splitter = new RegExp(`.{${cellBits}}`, "g");
+      const cells: string[] = bitSring.match(splitter) ?? [];
       this.rows.forEach((row, r) =>
         row.forEach((cell, c) => {
-          if (!cell.locked) cell.value = tokenValues[pencil[r][c]];
+          const bits = cells[length * r + c];
+          const value = parseInt(bits.slice(1), 2);
+          if (value) {
+            cell.value = value - 1;
+            if (bits.startsWith("1")) cell.lock();
+          }
         }),
       );
+    } else {
+      this.clear(true, true);
+      const tokenValues = Object.fromEntries(
+        this.tokens.map(({ token }, v) => [token, v]),
+      );
+      this.rows.forEach((row, r) =>
+        row.forEach((cell, c) => {
+          cell.value = tokenValues[data[r][c]];
+          cell.lock();
+        }),
+      );
+    }
   }
+}
+
+function parseInit(init: number | string) {
+  if (typeof init === "number") return { size: init, length: init * init };
+  const { size, length } = getDataInfo(init);
+  return { size, length, data: init };
+}
+
+function getDataInfo(data: number | string | ArrayBuffer) {
+  const size =
+    typeof data === "number"
+      ? data
+      : {
+          [8]: 2,
+          [51]: 3,
+          [192]: 4,
+          [469]: 5,
+          [1134]: 6,
+        }[
+          (data instanceof ArrayBuffer ? data : Uint8Array.fromBase64(data))
+            .byteLength
+        ];
+  if (!size || size < 2 || size > 6) throw "Invalid size";
+  const length = size * size;
+  const cellBits = 1 + Math.ceil(Math.log2(length + 1));
+  return { size, length, cellBits };
+}
+
+function bits(n: number, b: number) {
+  return n.toString(2).padStart(b, "0");
 }
 
 function getTokens(size: number) {

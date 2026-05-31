@@ -4,12 +4,34 @@ import Board from "./Board";
 import { AppContext, useAppContext } from "./AppContext";
 import { Tokens } from "./Tokens";
 
+function parse(init: string) {
+  const number = parseInt(init);
+  if (number) return number;
+  return init;
+}
+
+function firstValidGame(...init: (number | string)[]) {
+  for (const item of init) {
+    try {
+      return new Game(item);
+    } catch {
+      console.debug("new game failed:", item);
+    }
+  }
+  return new Game(
+    "BkEgXBUAASACgAXoAAAAlYAKABIAAZAAALgAAGQABEAJABPAAAAClQAiAFgABcGQVBgA",
+  );
+}
+
 export default function App() {
-  const game = useMemo(() => {
-    const gameState = localStorage.getItem("gameState");
-    return new Game(gameState ? JSON.parse(gameState) : 3);
-  }, []);
-  const ctx = useAppContext(game);
+  const game = useMemo(
+    () =>
+      firstValidGame(
+        parse(location.hash.slice(1)),
+        localStorage.getItem("gameState") ?? "",
+      ),
+    [],
+  );
 
   useEffect(() => {
     const app = document.getElementById("root")!;
@@ -25,6 +47,7 @@ export default function App() {
       );
       const n = Math.floor((((b - 2) / g - 2) / g - 2) / g);
       const t = g * n;
+
       app.className = layout;
       app.style.setProperty("--width-note", `${n}px`);
       app.style.setProperty("--width-tile", `${t}px`);
@@ -36,7 +59,7 @@ export default function App() {
   }, [game.size]);
 
   return (
-    <AppContext value={ctx}>
+    <AppContext value={useAppContext(game)}>
       <Tokens />
       <Board />
     </AppContext>

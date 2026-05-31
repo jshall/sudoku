@@ -31,13 +31,13 @@ export function useAppContext(game: Game) {
         );
     else game.clear(true, true);
   }
-  function saveGame(game: Game) {
-    localStorage.setItem("gameState", JSON.stringify(game.save()));
-  }
 
   useEffect(() => {
     window.game = game;
-    return game.valueUpdates.subscribe(() => setTokens([...game.tokens]));
+    return game.valueUpdates.subscribe(() => {
+      setTokens([...game.tokens]);
+      localStorage.setItem("gameState", game.save());
+    });
   }, [game, game.size]);
 
   return {
@@ -47,6 +47,5 @@ export function useAppContext(game: Game) {
     solved,
     tokens,
     newGame,
-    saveGame,
   };
 }

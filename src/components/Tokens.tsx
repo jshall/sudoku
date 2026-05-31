@@ -3,7 +3,7 @@ import { AppContext } from "./AppContext";
 import { cx } from "../utils";
 
 export function Tokens() {
-  const { game, highlightValue, newGame, setHighlightValue, saveGame, tokens } =
+  const { game, highlightValue, newGame, setHighlightValue, tokens } =
     useContext(AppContext)!;
 
   return (
@@ -31,9 +31,6 @@ export function Tokens() {
       <div className="flex column buttons">
         <button type="button" onClick={() => game.lock()}>
           Lock
-        </button>
-        <button type="button" onClick={() => saveGame(game)}>
-          Save Game
         </button>
       </div>
     </div>
