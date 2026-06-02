@@ -1,7 +1,7 @@
 import type { Cell } from "../Sudoku";
+import { TileContext, useCellContext } from "./TileContext";
 import { TileNotes } from "./TileNotes";
 import { TileValue } from "./TileValue";
-import { TileContext, useCellContext } from "./TileContext";
 
 export type TileProps = { cell: Cell };
 export function Tile({ cell }: TileProps) {

@@ -1,17 +1,16 @@
 import { css } from "@emotion/react";
 import { useContext } from "react";
-import { gridStyle } from "../utils";
-import { cx } from "../utils";
+import { cx, gridStyle } from "./_styles";
 import { AppContext } from "./AppContext";
 import { Tile } from "./Tile";
 
 const boardStyle = css({
   position: "relative",
-  border: "var(--border-hard) 1px",
+  border: "var(--border-hard) var(--border-width)",
 });
 
 const blockStyle = css({
-  border: "var(--border-hard) 1px",
+  border: "var(--border-hard) var(--border-width)",
 
   color: "var(--pencil)",
   fontFamily: "var(--mono)",
@@ -27,9 +26,9 @@ const solvedStyle = css({
   transform: "translate(-50%, -50%)",
 
   color: "var(--accent)",
-  lineHeight: "normal",
   padding: "0.2em 0.6em",
   fontSize: "20vmin",
+  lineHeight: 1,
 
   background:
     "radial-gradient(ellipse, rgb(from var(--bg) r g b / 0.8) 55%, #fff0 70% )",

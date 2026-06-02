@@ -1,35 +1,17 @@
 import { css } from "@emotion/react";
 import { useContext } from "react";
-import { flexStyle } from "../utils";
-import { cx } from "../utils";
+import { cx, flexDirectionShort, flexStyle } from "./_styles";
 import { AppContext } from "./AppContext";
 
-const toolbarStyle = css({
-  color: "var(--pencil)",
-  ".landscape &": {
-    flexDirection: "column",
-    height: "100svh",
-  },
-  ".portrait &": {
-    flexDirection: "row",
-    width: "100svw",
-  },
-});
-
-const buttonGroupStyle = css({
-  flex: 0,
-  flexDirection: "column",
-  gap: "0.4em",
-  padding: "0.4em",
-});
-
 const tokenStyle = css({
-  flex: 1,
+  // flex: 1,
   position: "relative",
   container: "size",
+  color: "var(--pencil)",
   textAlign: "center",
   fontSize: "calc(0.7 * var(--tile))",
-  lineHeight: "normal",
+  lineHeight: 1,
+  minWidth: "1em",
   "&.highlight": {
     background: "radial-gradient(var(--highlight) 50%, #fff0 85%)",
   },
@@ -44,16 +26,11 @@ const countStyle = css({
 });
 
 export function Tokens() {
-  const { game, highlightValue, newGame, setHighlightValue, tokens } =
+  const { game, highlightValue, setHighlightValue, tokens } =
     useContext(AppContext)!;
 
   return (
-    <div css={[flexStyle, toolbarStyle]}>
-      <div css={[flexStyle, buttonGroupStyle]}>
-        <button type="button" onClick={() => newGame(game)}>
-          New Game
-        </button>
-      </div>
+    <div css={[flexStyle, flexDirectionShort]}>
       {tokens.map(({ token, count }, i) => {
         const events =
           tokens[i].count === game.length
@@ -78,14 +55,6 @@ export function Tokens() {
           </div>
         );
       })}
-      <div css={[flexStyle, buttonGroupStyle]}>
-        <button type="button" onClick={() => game.lock()}>
-          Lock
-        </button>
-        <button type="button" onClick={() => game.clear()}>
-          Reset
-        </button>
-      </div>
     </div>
   );
 }

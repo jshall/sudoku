@@ -3,7 +3,7 @@ import { createContext, useMemo, useSyncExternalStore } from "react";
 import type { Cell } from "../Sudoku";
 
 const tileStyle = css({
-  border: "var(--border-soft) 1px",
+  border: "var(--border-soft) var(--border-width)",
 
   "&.highlight": {
     background: "var(--highlight)",

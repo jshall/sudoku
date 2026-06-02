@@ -1,9 +1,10 @@
 import { css } from "@emotion/react";
 import { useEffect, useMemo, useState } from "react";
 import { Game } from "../Sudoku";
+import { flexDirectionLong, flexStyle, noSelectStyle } from "./_styles";
 import { AppContext, useAppContext } from "./AppContext";
 import Board from "./Board";
-import { Tokens } from "./Tokens";
+import { Toolbar } from "./Toolbar";
 
 function parse(init: string) {
   const number = parseInt(init);
@@ -27,22 +28,13 @@ function firstValidGame(...init: (number | string)[]) {
 const appStyle = css({
   width: "100svw",
   height: "100svh",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  flexDirection: "column",
-  "&.landscape": {
-    flexDirection: "row",
-  },
-  userSelect: "none",
 });
 
 export default function App() {
-  const [layout, setLayout] = useState("portrait");
   const [sizeVariables, setSizeVariables] = useState(css`
-    --grid: repeat(3, 1fr);
-    --tile: 10.8svmin;
-    --note: 3.6svmin;
+    --tile: 0px;
+    --note: 0px;
+    --border-width: 0px;
   `);
   const game = useMemo(
     () =>
@@ -54,17 +46,21 @@ export default function App() {
   );
 
   useEffect(() => {
-    const g = game.size;
+    const grid = game.size;
     function resize() {
       const { width, height } = window.visualViewport!;
-      setLayout(width > height ? "landscape" : "portrait");
-      const n = Math.floor(
-        (((Math.min(width, height) - 2) / g - 2) / g - 2) / g,
+      document.body.className = width > height ? "landscape" : "portrait";
+      const border = 1;
+      const note = Math.floor(
+        (((Math.min(width, height) - 2 * border) / grid - 2 * border) / grid -
+          2 * border) /
+          grid,
       );
       setSizeVariables(css`
-        --grid: repeat(${g}, 1fr);
-        --tile: ${g * n}px;
-        --note: ${n}px;
+        --grid: repeat(${grid}, 1fr);
+        --tile: ${grid * note}px;
+        --note: ${note}px;
+        --border-width: ${border}px;
       `);
     }
     resize();
@@ -73,9 +69,17 @@ export default function App() {
   }, [game.size]);
 
   return (
-    <div className={layout} css={[sizeVariables, appStyle]}>
+    <div
+      css={[
+        sizeVariables,
+        flexStyle,
+        flexDirectionLong,
+        appStyle,
+        noSelectStyle,
+      ]}
+    >
       <AppContext value={useAppContext(game)}>
-        <Tokens />
+        <Toolbar />
         <Board />
       </AppContext>
     </div>

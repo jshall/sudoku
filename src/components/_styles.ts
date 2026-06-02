@@ -12,6 +12,10 @@ export function cx(...classes: (string | Record<string, boolean>)[]) {
   return classList.join(" ");
 }
 
+export const noSelectStyle = css({
+  userSelect: "none",
+});
+
 export const gridStyle = css({
   display: "grid",
   alignItems: "center",
@@ -27,4 +31,16 @@ export const flexStyle = css({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+});
+
+export const flexDirectionLong = css({
+  ".portrait &": {
+    flexDirection: "column",
+  },
+});
+
+export const flexDirectionShort = css({
+  ".landscape &": {
+    flexDirection: "column",
+  },
 });

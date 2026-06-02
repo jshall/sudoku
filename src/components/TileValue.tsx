@@ -1,7 +1,6 @@
 import { css } from "@emotion/react";
 import { useContext, useMemo, type UIEvent } from "react";
-import { flexStyle } from "../utils";
-import { cx } from "../utils";
+import { cx, flexStyle } from "./_styles";
 import { AppContext } from "./AppContext";
 import { TileContext } from "./TileContext";
 
