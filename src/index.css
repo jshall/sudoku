@@ -19,6 +19,7 @@
   color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
+  box-sizing: border-box;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -41,21 +42,6 @@
     --highlight: #4570b66e;
     --code-bg: #1f2028;
   }
-}
-
-#root {
-  width: 100svw;
-  height: 100svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  box-sizing: border-box;
-  &.landscape {
-    flex-direction: row;
-  }
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 body {
@@ -108,122 +94,4 @@ code {
 
 .clickable {
   cursor: pointer;
-}
-
-#tokens {
-  color: var(--pencil);
-  .landscape & {
-    flex-direction: column;
-    height: 100svh;
-  }
-  .portrait & {
-    flex-direction: row;
-    width: 100svw;
-  }
-  > :has(.token) {
-    flex: 1;
-    position: relative;
-    container: size;
-    text-align: center;
-    font-size: calc(0.7 * var(--width-tile));
-    line-height: normal;
-    &.highlight {
-      background: radial-gradient(var(--highlight) 50%, #fff0 85%);
-    }
-    > .count {
-      font-size: 0.3em;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(160%, 50%);
-    }
-  }
-  > .buttons {
-    flex: 0;
-    gap: 0.4em;
-    padding: 0.4em;
-  }
-}
-
-.grid {
-  display: grid;
-  align-items: center;
-  justify-content: center;
-  grid-template-rows: var(--grid);
-  grid-template-columns: var(--grid);
-  > * {
-    flex: 1;
-  }
-}
-
-.flex {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  &.column {
-    flex-direction: column;
-  }
-}
-
-.board {
-  position: relative;
-  border: var(--border-hard) 1px;
-
-  > .solved {
-    display: none;
-    pointer-events: none;
-
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    color: var(--accent);
-    line-height: normal;
-    padding: 0.2em 0.6em;
-    font-size: 20vmin;
-
-    background: radial-gradient(
-      ellipse,
-      rgb(from var(--bg) r g b / 0.8) 55%,
-      #fff0 70%
-    );
-
-    .solved > & {
-      display: block;
-    }
-  }
-}
-
-.block {
-  border: var(--border-hard) 1px;
-
-  color: var(--pencil);
-  font-family: var(--mono);
-}
-
-.tile {
-  border: var(--border-soft) 1px;
-
-  &.highlight {
-    background: var(--highlight);
-  }
-}
-
-.value {
-  width: var(--width-tile, 1px);
-  height: var(--width-tile, 1px);
-  font-size: var(--width-tile, 1px);
-  &.locked {
-    color: var(--pen);
-  }
-}
-
-.note {
-  width: var(--width-note, 1px);
-  height: var(--width-note, 1px);
-  font-size: var(--width-note, 1px);
-  &.unlikely {
-    color: rgb(from var(--pencil) r g b / 0.2);
-  }
 }

@@ -1,5 +1,14 @@
+import { css } from "@emotion/react";
 import { createContext, useMemo, useSyncExternalStore } from "react";
 import type { Cell } from "../Sudoku";
+
+const tileStyle = css({
+  border: "var(--border-soft) 1px",
+
+  "&.highlight": {
+    background: "var(--highlight)",
+  },
+});
 
 export function useCellContext(cell: Cell) {
   const value = useSyncExternalStore(
@@ -25,7 +34,7 @@ export function useCellContext(cell: Cell) {
     return possible.length === 1 ? possible[0] : null;
   }, [notes]);
 
-  return { cell, value, locked, notes, mustBe };
+  return { cell, locked, mustBe, notes, tileStyle, value };
 }
 
 export const TileContext = createContext<ReturnType<

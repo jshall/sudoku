@@ -1,7 +1,8 @@
-import { useEffect, useMemo } from "react";
+import { css } from "@emotion/react";
+import { useEffect, useMemo, useState } from "react";
 import { Game } from "../Sudoku";
-import Board from "./Board";
 import { AppContext, useAppContext } from "./AppContext";
+import Board from "./Board";
 import { Tokens } from "./Tokens";
 
 function parse(init: string) {
@@ -23,7 +24,26 @@ function firstValidGame(...init: (number | string)[]) {
   );
 }
 
+const appStyle = css({
+  width: "100svw",
+  height: "100svh",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexDirection: "column",
+  "&.landscape": {
+    flexDirection: "row",
+  },
+  userSelect: "none",
+});
+
 export default function App() {
+  const [layout, setLayout] = useState("portrait");
+  const [sizeVariables, setSizeVariables] = useState(css`
+    --grid: repeat(3, 1fr);
+    --tile: 10.8svmin;
+    --note: 3.6svmin;
+  `);
   const game = useMemo(
     () =>
       firstValidGame(
@@ -34,24 +54,18 @@ export default function App() {
   );
 
   useEffect(() => {
-    const app = document.getElementById("root")!;
     const g = game.size;
     function resize() {
-      const layout =
-        window.visualViewport!.width > window.visualViewport!.height
-          ? "landscape"
-          : "portrait";
-      const b = Math.min(
-        window.visualViewport!.width,
-        window.visualViewport!.height,
+      const { width, height } = window.visualViewport!;
+      setLayout(width > height ? "landscape" : "portrait");
+      const n = Math.floor(
+        (((Math.min(width, height) - 2) / g - 2) / g - 2) / g,
       );
-      const n = Math.floor((((b - 2) / g - 2) / g - 2) / g);
-      const t = g * n;
-
-      app.className = layout;
-      app.style.setProperty("--width-note", `${n}px`);
-      app.style.setProperty("--width-tile", `${t}px`);
-      app.style.setProperty("--grid", `repeat(${g}, 1fr)`);
+      setSizeVariables(css`
+        --grid: repeat(${g}, 1fr);
+        --tile: ${g * n}px;
+        --note: ${n}px;
+      `);
     }
     resize();
     addEventListener("resize", resize);
@@ -59,9 +73,11 @@ export default function App() {
   }, [game.size]);
 
   return (
-    <AppContext value={useAppContext(game)}>
-      <Tokens />
-      <Board />
-    </AppContext>
+    <div className={layout} css={[sizeVariables, appStyle]}>
+      <AppContext value={useAppContext(game)}>
+        <Tokens />
+        <Board />
+      </AppContext>
+    </div>
   );
 }
