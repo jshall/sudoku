@@ -11,7 +11,7 @@ export class Game {
   public readonly tokens: readonly { token: string; count: number }[];
   public readonly valueUpdates = createDispatcher();
 
-  constructor(init: number | string) {
+  constructor(init: number | string | string[][]) {
     const { size, length, data } = parseInit(init);
     this.size = size;
     this.length = length;
@@ -126,8 +126,14 @@ export class Game {
   }
 }
 
-function parseInit(init: number | string) {
+function parseInit(init: number | string | string[][]) {
   if (typeof init === "number") return { size: init, length: init * init };
+  if (init instanceof Array)
+    return {
+      size: Math.sqrt(init.length),
+      length: init.length,
+      data: init,
+    };
   const { size, length } = getDataInfo(init);
   return { size, length, data: init };
 }

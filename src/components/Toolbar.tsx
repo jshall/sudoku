@@ -2,6 +2,7 @@ import { css } from "@emotion/react";
 import { useContext } from "react";
 import { flexStyle, useOrientation } from "./_styles";
 import { AppContext } from "./AppContext";
+import { NewGame } from "./NewGame";
 import { Tokens } from "./Tokens";
 
 const buttonGroupStyle = css({
@@ -13,14 +14,12 @@ const buttonGroupStyle = css({
 
 export function Toolbar() {
   const { flexDirectionShort } = useOrientation();
-  const { game, newGame } = useContext(AppContext)!;
+  const { game } = useContext(AppContext)!;
 
   return (
     <div css={[flexStyle, flexDirectionShort]}>
       <div css={[flexStyle, buttonGroupStyle]}>
-        <button type="button" onClick={() => newGame(game)}>
-          New Game
-        </button>
+        <NewGame />
       </div>
       <Tokens />
       <div css={[flexStyle, buttonGroupStyle]}>
