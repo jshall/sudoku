@@ -4,17 +4,19 @@ import { cx, flexStyle, gridStyle } from "./_styles";
 import { AppContext } from "./AppContext";
 import { TileContext } from "./TileContext";
 
-const noteStyle = css({
-  width: "var(--note, 1px)",
-  height: "var(--note, 1px)",
-  fontSize: "var(--note, 1px)",
-  "&.unlikely": {
-    color: "rgb(from var(--pencil) r g b / 0.2)",
-  },
-});
+function noteStyle(noteSize: number) {
+  return css({
+    width: noteSize,
+    height: noteSize,
+    fontSize: noteSize,
+    "&.unlikely": {
+      color: "rgb(from var(--pencil) r g b / 0.2)",
+    },
+  });
+}
 
 export function TileNotes() {
-  const { highlightValue, tokens } = useContext(AppContext)!;
+  const { highlightValue, tokens, uiSizes } = useContext(AppContext)!;
   const { tileStyle, cell, notes, mustBe } = useContext(TileContext)!;
   const highlight = useMemo(
     () => highlightValue !== null && notes[highlightValue] === "possible",
@@ -55,11 +57,15 @@ export function TileNotes() {
         clickable: "onClick" in events || "onContextMenu" in events,
         highlight,
       })}
-      css={[gridStyle, tileStyle]}
+      css={[gridStyle(uiSizes.grid), tileStyle(uiSizes.border)]}
       {...events}
     >
       {notes.map((note, i) => (
-        <div key={i} className={note} css={[flexStyle, noteStyle]}>
+        <div
+          key={i}
+          className={note}
+          css={[flexStyle, noteStyle(uiSizes.note)]}
+        >
           {note === "used" ? "" : tokens[i].token}
         </div>
       ))}

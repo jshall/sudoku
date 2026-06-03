@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { useContext } from "react";
-import { flexDirectionShort, flexStyle } from "./_styles";
+import { flexStyle, useOrientation } from "./_styles";
 import { AppContext } from "./AppContext";
 import { Tokens } from "./Tokens";
 
@@ -12,6 +12,7 @@ const buttonGroupStyle = css({
 });
 
 export function Toolbar() {
+  const { flexDirectionShort } = useOrientation();
   const { game, newGame } = useContext(AppContext)!;
 
   return (

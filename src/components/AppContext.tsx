@@ -6,10 +6,14 @@ import {
 } from "react";
 import type { Game } from "../Sudoku";
 
+export const DEFAULT_GAME =
+  "BkEgXBUAASACgAXoAAAAlYAKABIAAZAAALgAAGQABEAJABPAAAAClQAiAFgABcGQVBgA";
+
 export const AppContext = createContext<ReturnType<
   typeof useAppContext
 > | null>(null);
 export function useAppContext(game: Game) {
+  const [uiSizes, updateUiSizes] = useState({ grid: 0, note: 0, border: 0 });
   const [highlightValue, setHighlightValue] = useState<number | null>(null);
   const solved = useSyncExternalStore(
     game.valueUpdates.subscribe,
@@ -32,6 +36,7 @@ export function useAppContext(game: Game) {
     else game.clear(true, true);
   }
 
+  // Update tokens
   useEffect(() => {
     window.game = game;
     return game.valueUpdates.subscribe(() => {
@@ -43,14 +48,34 @@ export function useAppContext(game: Game) {
         setHighlightValue(null);
       localStorage.setItem("gameState", game.save());
     });
-  }, [game, game.size, highlightValue]);
+  }, [game, setTokens, highlightValue]);
+
+  // Manage sizing
+  useEffect(() => {
+    const grid = game.size;
+    function resize() {
+      if (!visualViewport) return;
+      const { width, height } = visualViewport;
+      const border = 1;
+      const note = Math.floor(
+        (((Math.min(width, height) - 2 * border) / grid - 2 * border) / grid -
+          2 * border) /
+          grid,
+      );
+      updateUiSizes({ grid, note, border });
+    }
+    resize();
+    addEventListener("resize", resize);
+    return () => removeEventListener("resize", resize);
+  }, [game.size]);
 
   return {
     game,
+    newGame,
     highlightValue,
     setHighlightValue,
     solved,
     tokens,
-    newGame,
+    uiSizes,
   };
 }

@@ -4,17 +4,21 @@ import { cx, gridStyle } from "./_styles";
 import { AppContext } from "./AppContext";
 import { Tile } from "./Tile";
 
-const boardStyle = css({
-  position: "relative",
-  border: "var(--border-hard) var(--border-width)",
-});
+function boardStyle(borderWidth: number) {
+  return css({
+    position: "relative",
+    border: `var(--border-hard) ${borderWidth}px`,
+  });
+}
 
-const blockStyle = css({
-  border: "var(--border-hard) var(--border-width)",
+function blockStyle(borderWidth: number) {
+  return css({
+    border: `var(--border-hard) ${borderWidth}px`,
 
-  color: "var(--pencil)",
-  fontFamily: "var(--mono)",
-});
+    color: "var(--pencil)",
+    fontFamily: "var(--mono)",
+  });
+}
 
 const solvedStyle = css({
   display: "none",
@@ -39,12 +43,16 @@ const solvedStyle = css({
 });
 
 export default function Board() {
-  const { game, solved } = useContext(AppContext)!;
+  const {
+    game,
+    uiSizes: { grid, border },
+    solved,
+  } = useContext(AppContext)!;
 
   return (
-    <div className={cx({ solved })} css={[gridStyle, boardStyle]}>
+    <div className={cx({ solved })} css={[gridStyle(grid), boardStyle(border)]}>
       {game.blocks.map((group, i) => (
-        <div key={i} css={[gridStyle, blockStyle]}>
+        <div key={i} css={[gridStyle(grid), blockStyle(border)]}>
           {group.map((cell, i) => (
             <Tile key={i} cell={cell} />
           ))}
