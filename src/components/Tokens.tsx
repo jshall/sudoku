@@ -9,11 +9,14 @@ function tokenStyle(tileSize: number) {
     container: "size",
     color: "var(--pencil)",
     textAlign: "center",
-    fontSize: Math.floor(0.7 * tileSize),
+    fontSize: Math.floor(0.8 * tileSize),
     lineHeight: 1,
     minWidth: "1em",
     "&.highlight": {
       background: "radial-gradient(var(--highlight) 50%, #fff0 85%)",
+    },
+    "&.complete": {
+      color: "var(--pen)",
     },
   });
 }
@@ -48,6 +51,7 @@ export function Tokens() {
             className={cx({
               clickable: "onClick" in events,
               highlight: highlightValue === i,
+              complete: count === game.length,
             })}
             css={[flexStyle, tokenStyle(uiSizes.note * uiSizes.grid)]}
             {...events}

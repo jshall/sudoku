@@ -1,4 +1,5 @@
 /* eslint-disable no-unexpected-multiline */
+import { css } from "@emotion/react";
 import {
   useCallback,
   useContext,
@@ -7,13 +8,21 @@ import {
   useRef,
   useState,
 } from "react";
-import { flexStyle } from "./_styles";
+import { boxShadowStyle, flexStyle } from "./_styles";
 import { AppContext, generators } from "./AppContext";
+
+const inputRowStyle = css({ marginBottom: ".7em" });
+
+const dialogStyle = css({
+  "&[open]": flexStyle,
+  flexDirection: "column",
+  borderRadius: "1rem",
+});
 
 export function NewGame() {
   const { newGame } = useContext(AppContext)!;
   const dialog = useRef<HTMLDialogElement>(null);
-  const [disabled, setDisabled] = useState(false);
+  const [isGenerating, setGenerating] = useState(false);
   const [size, setSize] = useState(3);
   const [generatorName, setGeneratorName] = useState("dosuku");
 
@@ -42,13 +51,13 @@ export function NewGame() {
   }, [size, generatorName, setGeneratorName]);
 
   const generate = useCallback(async () => {
-    setDisabled(true);
+    setGenerating(true);
     try {
       const init = await generators[size][1][generatorName]();
       newGame(init);
       dialog.current?.close();
     } finally {
-      setDisabled(false);
+      setGenerating(false);
     }
   }, [dialog, generatorName, size, newGame]);
 
@@ -57,9 +66,9 @@ export function NewGame() {
       <button type="button" onClick={() => dialog.current?.showModal()}>
         New Game
       </button>
-      <dialog ref={dialog}>
+      <dialog ref={dialog} css={[dialogStyle, boxShadowStyle]}>
         <h2>New Game</h2>
-        <div css={{ marginBottom: ".7em" }}>
+        <div css={inputRowStyle}>
           <label>
             Board size:&nbsp;
             <select
@@ -71,7 +80,7 @@ export function NewGame() {
             </select>
           </label>
         </div>
-        <div css={{ marginBottom: ".7em" }}>
+        <div css={inputRowStyle}>
           <label>
             Generator:&nbsp;
             <select
@@ -83,14 +92,14 @@ export function NewGame() {
             </select>
           </label>
         </div>
-        <div css={[flexStyle, { gap: ".6em" }]}>
-          <button disabled={disabled} onClick={() => dialog.current?.close()}>
-            Cancel
-          </button>
-          <button disabled={disabled} onClick={generate}>
-            Generate!
-          </button>
-        </div>
+        {isGenerating ? (
+          <div>Generating...</div>
+        ) : (
+          <div css={[flexStyle, { gap: ".6em" }]}>
+            <button onClick={() => dialog.current?.close()}>Cancel</button>
+            <button onClick={generate}>Generate!</button>
+          </div>
+        )}
       </dialog>
     </>
   );
