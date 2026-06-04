@@ -1,11 +1,11 @@
 import { css } from "@emotion/react";
 import { useContext } from "react";
-import { flexStyle, useOrientation } from "./_styles";
+import { cssFlex, cssFlexDirectionShort } from "./_styles";
 import { AppContext } from "./AppContext";
 import { NewGame } from "./NewGame";
 import { Tokens } from "./Tokens";
 
-const buttonGroupStyle = css({
+const cssButtonGroup = css({
   flex: 0,
   flexDirection: "column",
   gap: "0.4em",
@@ -13,16 +13,15 @@ const buttonGroupStyle = css({
 });
 
 export function Toolbar() {
-  const { flexDirectionShort } = useOrientation();
   const { game } = useContext(AppContext)!;
 
   return (
-    <div css={[flexStyle, flexDirectionShort]}>
-      <div css={[flexStyle, buttonGroupStyle]}>
+    <div css={[cssFlex, cssFlexDirectionShort]}>
+      <div css={[cssFlex, cssButtonGroup]}>
         <NewGame />
       </div>
       <Tokens />
-      <div css={[flexStyle, buttonGroupStyle]}>
+      <div css={[cssFlex, cssButtonGroup]}>
         <button type="button" onClick={() => game.lock()}>
           Lock
         </button>

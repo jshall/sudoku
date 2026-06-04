@@ -1,26 +1,22 @@
 import { css } from "@emotion/react";
 import { useContext } from "react";
-import { cx, gridStyle } from "./_styles";
+import { cx, cssGrid } from "./_styles";
 import { AppContext } from "./AppContext";
 import { Tile } from "./Tile";
 
-function boardStyle(borderWidth: number) {
-  return css({
-    position: "relative",
-    border: `var(--border-hard) ${borderWidth}px`,
-  });
-}
+const cssBoard = css({
+  position: "relative",
+  border: "var(--border-hard) var(--border-width)",
+});
 
-function blockStyle(borderWidth: number) {
-  return css({
-    border: `var(--border-hard) ${borderWidth}px`,
+const cssBlock = css({
+  border: "var(--border-hard) var(--border-width)",
 
-    color: "var(--pencil)",
-    fontFamily: "var(--mono)",
-  });
-}
+  color: "var(--pencil)",
+  fontFamily: "var(--mono)",
+});
 
-const solvedStyle = css({
+const cssSolved = css({
   display: "none",
   pointerEvents: "none",
 
@@ -43,22 +39,18 @@ const solvedStyle = css({
 });
 
 export default function Board() {
-  const {
-    game,
-    uiSizes: { grid, border },
-    solved,
-  } = useContext(AppContext)!;
+  const { game, solved } = useContext(AppContext)!;
 
   return (
-    <div className={cx({ solved })} css={[gridStyle(grid), boardStyle(border)]}>
+    <div className={cx({ solved })} css={[cssGrid, cssBoard]}>
       {game.blocks.map((group, i) => (
-        <div key={i} css={[gridStyle(grid), blockStyle(border)]}>
+        <div key={i} css={[cssGrid, cssBlock]}>
           {group.map((cell, i) => (
             <Tile key={i} cell={cell} />
           ))}
         </div>
       ))}
-      <div css={solvedStyle}>Solved!</div>
+      <div css={cssSolved}>Solved!</div>
     </div>
   );
 }

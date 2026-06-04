@@ -1,23 +1,21 @@
 import { css } from "@emotion/react";
 import { useContext, useMemo, type UIEvent } from "react";
-import { cx, flexStyle, gridStyle } from "./_styles";
+import { cx, cssFlex, cssGrid } from "./_styles";
 import { AppContext } from "./AppContext";
 import { TileContext } from "./TileContext";
 
-function noteStyle(noteSize: number) {
-  return css({
-    width: noteSize,
-    height: noteSize,
-    fontSize: noteSize,
-    "&.unlikely": {
-      color: "rgb(from var(--pencil) r g b / 0.2)",
-    },
-  });
-}
+const cssNote = css({
+  width: "var(--note-size)",
+  height: "var(--note-size)",
+  fontSize: "var(--note-size)",
+  "&.unlikely": {
+    color: "rgb(from var(--pencil) r g b / 0.2)",
+  },
+});
 
 export function TileNotes() {
-  const { highlightValue, tokens, uiSizes } = useContext(AppContext)!;
-  const { tileStyle, cell, notes, mustBe } = useContext(TileContext)!;
+  const { highlightValue, tokens } = useContext(AppContext)!;
+  const { cssTile, cell, notes, mustBe } = useContext(TileContext)!;
   const highlight = useMemo(
     () => highlightValue !== null && notes[highlightValue] === "possible",
     [highlightValue, notes],
@@ -57,15 +55,11 @@ export function TileNotes() {
         clickable: "onClick" in events || "onContextMenu" in events,
         highlight,
       })}
-      css={[gridStyle(uiSizes.grid), tileStyle(uiSizes.border)]}
+      css={[cssGrid, cssTile]}
       {...events}
     >
       {notes.map((note, i) => (
-        <div
-          key={i}
-          className={note}
-          css={[flexStyle, noteStyle(uiSizes.note)]}
-        >
+        <div key={i} className={note} css={[cssFlex, cssNote]}>
           {note === "used" ? "" : tokens[i].token}
         </div>
       ))}

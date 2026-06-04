@@ -1,5 +1,4 @@
 import { css } from "@emotion/react";
-import { useEffect } from "react";
 
 export function cx(...classes: (string | Record<string, boolean>)[]) {
   const classList: string[] = [];
@@ -13,55 +12,39 @@ export function cx(...classes: (string | Record<string, boolean>)[]) {
   return classList.join(" ");
 }
 
-export const noSelectStyle = css({
+export const cssNoSelect = css({
   userSelect: "none",
 });
 
-export function gridStyle(gridSize: number) {
-  return css({
-    display: "grid",
-    alignItems: "center",
-    justifyContent: "center",
-    gridTemplateRows: `repeat(${gridSize}, 1fr)`,
-    gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-    "> *": {
-      flex: 1,
-    },
-  });
-}
+export const cssGrid = css({
+  display: "grid",
+  alignItems: "center",
+  justifyContent: "center",
+  gridTemplateRows: "var(--grid-template)",
+  gridTemplateColumns: "var(--grid-template)",
+  "> *": {
+    flex: 1,
+  },
+});
 
-export const flexStyle = css({
+export const cssFlex = css({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
 });
 
-export function useOrientation() {
-  useEffect(() => {
-    function resize() {
-      if (!visualViewport) return;
-      const { width, height } = window.visualViewport!;
-      document.body.className = width > height ? "landscape" : "portrait";
-    }
-    resize();
-    addEventListener("resize", resize);
-    return () => removeEventListener("resize", resize);
-  }, []);
+export const cssFlexDirectionLong = css({
+  "@media(orientation: portrait)": {
+    flexDirection: "column",
+  },
+});
 
-  return {
-    flexDirectionLong: css({
-      ".portrait &": {
-        flexDirection: "column",
-      },
-    }),
-    flexDirectionShort: css({
-      ".landscape &": {
-        flexDirection: "column",
-      },
-    }),
-  };
-}
+export const cssFlexDirectionShort = css({
+  "@media(orientation: landscape)": {
+    flexDirection: "column",
+  },
+});
 
-export const boxShadowStyle = css({
+export const cssBoxShadow = css({
   boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
 });

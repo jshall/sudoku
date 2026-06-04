@@ -1,4 +1,3 @@
-/* eslint-disable no-unexpected-multiline */
 import { css } from "@emotion/react";
 import {
   useCallback,
@@ -8,13 +7,13 @@ import {
   useRef,
   useState,
 } from "react";
-import { boxShadowStyle, flexStyle } from "./_styles";
+import { cssBoxShadow, cssFlex } from "./_styles";
 import { AppContext, generators } from "./AppContext";
 
-const inputRowStyle = css({ marginBottom: ".7em" });
+const cssInputRow = css({ marginBottom: ".7em" });
 
-const dialogStyle = css({
-  "&[open]": flexStyle,
+const cssDialog = css({
+  "&[open]": cssFlex,
   flexDirection: "column",
   borderRadius: "1rem",
 });
@@ -66,9 +65,9 @@ export function NewGame() {
       <button type="button" onClick={() => dialog.current?.showModal()}>
         New Game
       </button>
-      <dialog ref={dialog} css={[dialogStyle, boxShadowStyle]}>
+      <dialog ref={dialog} css={[cssDialog, cssBoxShadow]}>
         <h2>New Game</h2>
-        <div css={inputRowStyle}>
+        <div css={cssInputRow}>
           <label>
             Board size:&nbsp;
             <select
@@ -80,7 +79,7 @@ export function NewGame() {
             </select>
           </label>
         </div>
-        <div css={inputRowStyle}>
+        <div css={cssInputRow}>
           <label>
             Generator:&nbsp;
             <select
@@ -95,7 +94,7 @@ export function NewGame() {
         {isGenerating ? (
           <div>Generating...</div>
         ) : (
-          <div css={[flexStyle, { gap: ".6em" }]}>
+          <div css={[cssFlex, { gap: ".6em" }]}>
             <button onClick={() => dialog.current?.close()}>Cancel</button>
             <button onClick={generate}>Generate!</button>
           </div>

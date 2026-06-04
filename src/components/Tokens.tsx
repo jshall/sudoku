@@ -1,27 +1,25 @@
 import { css } from "@emotion/react";
 import { useContext } from "react";
-import { cx, flexStyle, useOrientation } from "./_styles";
+import { cx, cssFlex, cssFlexDirectionShort } from "./_styles";
 import { AppContext } from "./AppContext";
 
-function tokenStyle(tileSize: number) {
-  return css({
-    position: "relative",
-    container: "size",
-    color: "var(--pencil)",
-    textAlign: "center",
-    fontSize: Math.floor(0.8 * tileSize),
-    lineHeight: 1,
-    minWidth: "1em",
-    "&.highlight": {
-      background: "radial-gradient(var(--highlight) 50%, #fff0 85%)",
-    },
-    "&.complete": {
-      color: "var(--pen)",
-    },
-  });
-}
+const cssToken = css({
+  position: "relative",
+  container: "size",
+  color: "var(--pencil)",
+  textAlign: "center",
+  fontSize: "calc(0.8 * var(--tile-size))",
+  lineHeight: 1,
+  minWidth: "1em",
+  "&.highlight": {
+    background: "radial-gradient(var(--highlight) 50%, #fff0 85%)",
+  },
+  "&.complete": {
+    color: "var(--pen)",
+  },
+});
 
-const countStyle = css({
+const cssCount = css({
   fontSize: "0.3em",
   position: "absolute",
   bottom: 0,
@@ -34,15 +32,13 @@ const countStyle = css({
 });
 
 export function Tokens() {
-  const { flexDirectionShort } = useOrientation();
-  const { game, highlightValue, setHighlightValue, tokens, uiSizes } =
-    useContext(AppContext)!;
+  const { highlightValue, setHighlightValue, tokens } = useContext(AppContext)!;
 
   return (
-    <div css={[flexStyle, flexDirectionShort]}>
+    <div css={[cssFlex, cssFlexDirectionShort]}>
       {tokens.map(({ token, count }, i) => {
         const events =
-          tokens[i].count === game.length
+          tokens[i].count === tokens.length
             ? {}
             : {
                 onClick() {
@@ -55,13 +51,13 @@ export function Tokens() {
             className={cx({
               clickable: "onClick" in events,
               highlight: highlightValue === i,
-              complete: count === game.length,
+              complete: count === tokens.length,
             })}
-            css={[flexStyle, tokenStyle(uiSizes.note * uiSizes.grid)]}
+            css={[cssFlex, cssToken]}
             {...events}
           >
             {token}
-            <div css={countStyle}>{count}</div>
+            <div css={cssCount}>{count}</div>
           </div>
         );
       })}
