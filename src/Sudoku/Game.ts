@@ -172,6 +172,8 @@ function getTokens(size: number) {
       return "0123456789ABCDEF".split("");
     case 5:
       return "ABCDEFGHIJKLMNOPQRSTUVWXY".split("");
+    case 6:
+      return "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯЪЫЭ".split("");
     default:
       throw "Invalid size";
   }

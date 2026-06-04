@@ -7,8 +7,11 @@ import {
 } from "react";
 import { Game } from "../Sudoku";
 
-export const DEFAULT_GAME =
-  "BkEgXBUAASACgAXoAAAAlYAKABIAAZAAALgAAGQABEAJABPAAAAClQAiAFgABcGQVBgA";
+export const DEFAULT_GAMES = {
+  [3]: "BkEgXBUAASACgAXoAAAAlYAKABIAAZAAALgAAGQABEAJABPAAAAClQAiAFgABcGQVBgA",
+  [4]: "vupAAsAArAAqAwAiAAAhoAlvjAAAksAAAosAhAAAAAlAqAAmAAktAAmAAhAAAlvAlAAAAqAisAAAAAmwsAAinAhAAAmAAAAAAwAkApAmAAAArAtAAvrAukAAAnAAAAAsnAAAAAoAAAhmAipAAtAmAAAAuAvAwAsAAAAAAtAAAsAwmAAjqjAAAAAliArAAAAuAsjAAAuAArAAiqAAuAArAwAAAAAhAmkAAAhpAAAswiAloAAAwAvAtAAqAAsAAnrp",
+  [5]: "4ApoAlAAjAzAmhAA3A5AtA1A2AAAAAvAi0mpAytAAsu1AxAhAAAAAjAAA2AyAAAAAtAAmh3vAAAAvAt2uA1AwkAr3AiAqzAyAAsAAAi5An3AArAAA2AxAyoAAA0AmAAAArAjAshiAxmAAAA3ApAAolAAAAAAA3yAuwAAA2AAAAArAtAAAnAA1A0A23rAAhviAsqwx4AyAxA3hAAAA512zAAAntplAAqmiAtumAAAAxpnAAoqzAjAAAA5AhqiAyAz4lAAAA2AAp5AAojnAAAAAoAAAvAAxApAAzAAAqAsAyAkA2AwAAAsAA0thqxAArAAAlAvAuAtAlAyAAA5AAnA3AAiAAAxAAAAA1mhAArtAAiAAAA0lsAwA5pmA4AAAAvAztqAA5kjAAAAyluA2p0AAstqwAAAvyi1AAAA5oAxAvAxhy4mAnlrAAuksAiA5AA2AAA3AuAAAAAoAAAplArvAAAAAAAirAAqA2AAAAm0AnupAwAvAAAAoAwAAAizA1AxAAAmAA0vApsAAAmAA3AryAnAj5AphAsA4otA1AAAAxswuAAkAAAAAlA1AAA3AAAAAhA5AxmlAA1kAsot3AjAAAAA1A2A4ApAoAAy3AuAkAAiA5mAvA",
+};
 
 function parse(init: string) {
   const number = parseInt(init);
@@ -24,7 +27,7 @@ function firstValidGame(...init: (number | string)[]) {
       console.debug("new game failed:", item);
     }
   }
-  return new Game(DEFAULT_GAME);
+  return new Game(DEFAULT_GAMES[3]);
 }
 
 type DosukuResponse = {
@@ -46,7 +49,7 @@ export const generators: {
   [3]: [
     "9x9",
     {
-      default: async () => DEFAULT_GAME,
+      default: async () => DEFAULT_GAMES[3],
       dosuku: async () => {
         const res = await fetch("https://sudoku-api.vercel.app/api/dosuku");
         const data: DosukuResponse = await res.json();
@@ -55,7 +58,15 @@ export const generators: {
       blank: async () => 3,
     },
   ],
-  [4]: ["16x16", { blank: async () => 4 }],
+  [4]: [
+    "16x16",
+    { default: async () => DEFAULT_GAMES[4], blank: async () => 4 },
+  ],
+  [5]: [
+    "25x25",
+    { default: async () => DEFAULT_GAMES[5], blank: async () => 5 },
+  ],
+  [6]: ["36x36", { blank: async () => 6 }],
 };
 
 export const AppContext = createContext<ReturnType<

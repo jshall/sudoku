@@ -24,9 +24,13 @@ function tokenStyle(tileSize: number) {
 const countStyle = css({
   fontSize: "0.3em",
   position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(160%, 50%)",
+  bottom: 0,
+  right: 0,
+  transform: "translate(15%, 25%)",
+  background: "radial-gradient(var(--highlight) 50%, #fff0 85%)",
+  borderRadius: "50%",
+  width: "1.3em",
+  padding: ".3em .2em",
 });
 
 export function Tokens() {
