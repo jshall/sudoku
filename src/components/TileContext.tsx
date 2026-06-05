@@ -1,9 +1,10 @@
 import { css } from "@emotion/react";
 import { createContext, useMemo, useSyncExternalStore } from "react";
 import type { Cell } from "../Sudoku";
+import { varBorderWidth } from "./_styles";
 
 const cssTile = css({
-  border: `var(--border-soft) var(--border-width)`,
+  border: `var(--border-soft) ${varBorderWidth}`,
 
   "&.highlight": {
     background: "var(--highlight)",

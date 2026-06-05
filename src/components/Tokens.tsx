@@ -1,15 +1,14 @@
 import { css } from "@emotion/react";
 import { useContext } from "react";
-import { cx, cssFlex, cssFlexDirectionShort } from "./_styles";
+import { cssFlex, cssFlexDirectionShort, cx, varTileSize } from "./_styles";
 import { AppContext } from "./AppContext";
 
 const cssToken = css({
   position: "relative",
-  container: "size",
   color: "var(--pencil)",
   textAlign: "center",
-  fontSize: "calc(0.8 * var(--tile-size))",
-  lineHeight: 1,
+  fontSize: `calc(0.8 * ${varTileSize})`,
+  lineHeight: 1.2,
   minWidth: "1em",
   "&.highlight": {
     background: "radial-gradient(var(--highlight) 50%, #fff0 85%)",
@@ -24,7 +23,9 @@ const cssCount = css({
   position: "absolute",
   bottom: 0,
   right: 0,
-  transform: "translate(15%, 25%)",
+  color: "var(--pen)",
+  fontWeight: "bolder",
+  transform: "translate(15%, 0%)",
   background: "radial-gradient(var(--highlight) 50%, #fff0 85%)",
   borderRadius: "50%",
   width: "1.3em",

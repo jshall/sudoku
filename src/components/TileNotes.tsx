@@ -1,13 +1,13 @@
 import { css } from "@emotion/react";
 import { useContext, useMemo, type UIEvent } from "react";
-import { cx, cssFlex, cssGrid } from "./_styles";
+import { cssFlex, cssGrid, cx, varNoteSize } from "./_styles";
 import { AppContext } from "./AppContext";
 import { TileContext } from "./TileContext";
 
 const cssNote = css({
-  width: "var(--note-size)",
-  height: "var(--note-size)",
-  fontSize: "var(--note-size)",
+  width: varNoteSize,
+  height: varNoteSize,
+  fontSize: varNoteSize,
   "&.unlikely": {
     color: "rgb(from var(--pencil) r g b / 0.2)",
   },

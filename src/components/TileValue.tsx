@@ -1,13 +1,13 @@
 import { css } from "@emotion/react";
 import { useContext, useMemo, type UIEvent } from "react";
-import { cx, cssFlex } from "./_styles";
+import { cssFlex, cx, varTileSize } from "./_styles";
 import { AppContext } from "./AppContext";
 import { TileContext } from "./TileContext";
 
 const cssValue = css({
-  width: "var(--tile-size)",
-  height: "var(--tile-size)",
-  fontSize: "var(--tile-size)",
+  width: varTileSize,
+  height: varTileSize,
+  fontSize: varTileSize,
   "&.locked": {
     color: "var(--pen)",
   },

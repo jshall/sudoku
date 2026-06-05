@@ -12,6 +12,16 @@ export function cx(...classes: (string | Record<string, boolean>)[]) {
   return classList.join(" ");
 }
 
+function cssVar() {
+  const name = Math.random().toString(36).substring(2, 9);
+  return [`--${name}`, `var(--${name})`];
+}
+export const [gameSize, varGameSize] = cssVar();
+export const [borderWidth, varBorderWidth] = cssVar();
+export const [gridTemplate, varGridTemplate] = cssVar();
+export const [noteSize, varNoteSize] = cssVar();
+export const [tileSize, varTileSize] = cssVar();
+
 export const cssNoSelect = css({
   userSelect: "none",
 });
@@ -20,8 +30,8 @@ export const cssGrid = css({
   display: "grid",
   alignItems: "center",
   justifyContent: "center",
-  gridTemplateRows: "var(--grid-template)",
-  gridTemplateColumns: "var(--grid-template)",
+  gridTemplateRows: varGridTemplate,
+  gridTemplateColumns: varGridTemplate,
   "> *": {
     flex: 1,
   },

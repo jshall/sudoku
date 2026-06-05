@@ -76,11 +76,6 @@ export function useAppContext(init: string) {
   const [game, setGame] = useState(
     firstValidGame(parse(init), localStorage.getItem("gameState") ?? ""),
   );
-  const [sizes, updateSizes] = useState({
-    base: game.size,
-    note: 0,
-    border: 0,
-  });
   const [highlightValue, setHighlightValue] = useState<number | null>(null);
   const solved = useSyncExternalStore(
     game.valueUpdates.subscribe,
@@ -112,25 +107,6 @@ export function useAppContext(init: string) {
     });
   }, [game, setTokens, highlightValue]);
 
-  // Manage sizing
-  useEffect(() => {
-    const base = game.size;
-    function resize() {
-      if (!visualViewport) return;
-      const { width, height } = visualViewport;
-      const border = 1;
-      const note = Math.floor(
-        (((Math.min(width, height) - 2 * border) / base - 2 * border) / base -
-          2 * border) /
-          base,
-      );
-      updateSizes({ base, note, border });
-    }
-    resize();
-    addEventListener("resize", resize);
-    return () => removeEventListener("resize", resize);
-  }, [game]);
-
   return {
     game,
     newGame,
@@ -138,6 +114,5 @@ export function useAppContext(init: string) {
     setHighlightValue,
     solved,
     tokens,
-    sizes,
   };
 }

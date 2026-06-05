@@ -1,16 +1,16 @@
 import { css } from "@emotion/react";
 import { useContext } from "react";
-import { cx, cssGrid } from "./_styles";
+import { cssGrid, cx, varBorderWidth } from "./_styles";
 import { AppContext } from "./AppContext";
 import { Tile } from "./Tile";
 
 const cssBoard = css({
   position: "relative",
-  border: "var(--border-hard) var(--border-width)",
+  border: `var(--border-hard) ${varBorderWidth}`,
 });
 
 const cssBlock = css({
-  border: "var(--border-hard) var(--border-width)",
+  border: `var(--border-hard) ${varBorderWidth}`,
 
   color: "var(--pencil)",
   fontFamily: "var(--mono)",
