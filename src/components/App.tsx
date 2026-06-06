@@ -12,7 +12,7 @@ import {
   varBorderWidth,
   varGameSize,
   varNoteSize,
-} from "./_styles";
+} from "utilities/styles";
 import { AppContext, useAppContext } from "./AppContext";
 import Board from "./Board";
 import { Toolbar } from "./Toolbar";

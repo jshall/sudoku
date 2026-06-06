@@ -1,4 +1,4 @@
-import type { Cell } from "../Sudoku";
+import type { Cell } from "Sudoku";
 import { TileContext, useCellContext } from "./TileContext";
 import { TileNotes } from "./TileNotes";
 import { TileValue } from "./TileValue";

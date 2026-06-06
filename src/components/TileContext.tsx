@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import { createContext, useMemo, useSyncExternalStore } from "react";
-import type { Cell } from "../Sudoku";
-import { varBorderWidth } from "./_styles";
+import type { Cell } from "Sudoku";
+import { varBorderWidth } from "utilities/styles";
 
 const cssTile = css({
   border: `var(--border-soft) ${varBorderWidth}`,

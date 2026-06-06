@@ -6,6 +6,11 @@
     "module": "esnext",
     "types": ["vite/client"],
     "skipLibCheck": true,
+    "paths": {
+      "Sudoku": ["./src/Sudoku"],
+      "components/*": ["./src/components/*"],
+      "utilities/*": ["./src/utilities/*"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",

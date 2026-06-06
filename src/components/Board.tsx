@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { useContext } from "react";
-import { cssGrid, cx, varBorderWidth } from "./_styles";
+import { cssGrid, cx, varBorderWidth } from "utilities/styles";
 import { AppContext } from "./AppContext";
 import { Tile } from "./Tile";
 

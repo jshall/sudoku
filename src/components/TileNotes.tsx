@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { useContext, useMemo, type UIEvent } from "react";
-import { cssFlex, cssGrid, cx, varNoteSize } from "./_styles";
+import { cssFlex, cssGrid, cx, varNoteSize } from "utilities/styles";
 import { AppContext } from "./AppContext";
 import { TileContext } from "./TileContext";
 

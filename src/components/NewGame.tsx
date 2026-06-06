@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { cssBoxShadow, cssFlex } from "./_styles";
+import { cssBoxShadow, cssFlex } from "utilities/styles";
 import { AppContext, generators } from "./AppContext";
 
 const cssInputRow = css({ marginBottom: ".7em" });

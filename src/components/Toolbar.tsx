@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { useContext } from "react";
-import { cssFlex, cssFlexDirectionShort } from "./_styles";
+import { cssFlex, cssFlexDirectionShort } from "utilities/styles";
 import { AppContext } from "./AppContext";
 import { NewGame } from "./NewGame";
 import { Tokens } from "./Tokens";

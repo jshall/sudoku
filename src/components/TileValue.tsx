@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { useContext, useMemo, type UIEvent } from "react";
-import { cssFlex, cx, varTileSize } from "./_styles";
+import { cssFlex, cx, varTileSize } from "utilities/styles";
 import { AppContext } from "./AppContext";
 import { TileContext } from "./TileContext";
 

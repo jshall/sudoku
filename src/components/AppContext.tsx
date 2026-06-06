@@ -5,7 +5,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { Game } from "../Sudoku";
+import { Game } from "Sudoku";
 
 export const DEFAULT_GAMES = {
   [3]: "BkEgXBUAASACgAXoAAAAlYAKABIAAZAAALgAAGQABEAJABPAAAAClQAiAFgABcGQVBgA",

@@ -1,6 +1,11 @@
 import { css } from "@emotion/react";
 import { useContext } from "react";
-import { cssFlex, cssFlexDirectionShort, cx, varTileSize } from "./_styles";
+import {
+  cssFlex,
+  cssFlexDirectionShort,
+  cx,
+  varTileSize,
+} from "utilities/styles";
 import { AppContext } from "./AppContext";
 
 const cssToken = css({
