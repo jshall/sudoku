@@ -1,14 +1,12 @@
 import { css } from "@emotion/react";
+import { useContext, useMemo, useRef, useState } from "react";
 import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+  availableSizes,
+  availableSources,
+  getGame,
+} from "utilities/gameLibrary";
 import { cssBoxShadow, cssFlex } from "utilities/styles";
-import { AppContext, generators } from "./AppContext";
+import { AppContext } from "./AppContext";
 
 const cssInputRow = css({ marginBottom: ".7em" });
 
@@ -19,46 +17,51 @@ const cssDialog = css({
 });
 
 export function NewGame() {
-  const { newGame } = useContext(AppContext)!;
+  const { game, newGame } = useContext(AppContext)!;
   const dialog = useRef<HTMLDialogElement>(null);
   const [isGenerating, setGenerating] = useState(false);
-  const [size, setSize] = useState(3);
-  const [generatorName, setGeneratorName] = useState("dosuku");
+  const [size, setSize] = useState(game.size);
+  const [sourceName, setSourceName] = useState(
+    availableSources(size).find(() => true)!.name,
+  );
 
   const sizeOptions = useMemo(
     () =>
-      Object.entries(generators).map(([size, [description]]) => (
-        <option key={size} value={size}>
-          {description}
-        </option>
-      )),
+      availableSizes()
+        .map(({ size, description }) => (
+          <option key={size} value={size}>
+            {description}
+          </option>
+        ))
+        .toArray(),
     [],
   );
   const generatorOptions = useMemo(
     () =>
-      Object.keys(generators[size][1]).map((name) => (
-        <option key={name}>{name}</option>
-      )),
+      availableSources(size)
+        .map(({ name }) => <option key={name}>{name}</option>)
+        .toArray(),
     [size],
   );
 
-  useEffect(() => {
-    const list = Object.keys(generators[size][1]);
-    if (!list.includes(generatorName))
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setGeneratorName(list[0]);
-  }, [size, generatorName, setGeneratorName]);
-
-  const generate = useCallback(async () => {
+  async function generate() {
     setGenerating(true);
     try {
-      const init = await generators[size][1][generatorName]();
-      newGame(init);
+      newGame(await getGame(size, sourceName));
       dialog.current?.close();
     } finally {
       setGenerating(false);
     }
-  }, [dialog, generatorName, size, newGame]);
+  }
+
+  function onSizeChange(newValue: string) {
+    const size = parseInt(newValue);
+    const sources = availableSources(size)
+      .map((s) => s.name)
+      .toArray();
+    if (!sources.includes(sourceName)) setSourceName(sources[0]);
+    setSize(size);
+  }
 
   return (
     <>
@@ -73,7 +76,7 @@ export function NewGame() {
             <select
               id="size"
               value={size}
-              onChange={(e) => setSize(parseInt(e.target.value))}
+              onChange={(e) => onSizeChange(e.target.value)}
             >
               {sizeOptions}
             </select>
@@ -84,8 +87,8 @@ export function NewGame() {
             Generator:&nbsp;
             <select
               id="generatorName"
-              value={generatorName}
-              onChange={(e) => setGeneratorName(e.target.value)}
+              value={sourceName}
+              onChange={(e) => setSourceName(e.target.value)}
             >
               {generatorOptions}
             </select>
@@ -95,8 +98,12 @@ export function NewGame() {
           <div>Generating...</div>
         ) : (
           <div css={[cssFlex, { gap: ".6em" }]}>
-            <button onClick={() => dialog.current?.close()}>Cancel</button>
-            <button onClick={generate}>Generate!</button>
+            <button type="button" onClick={() => dialog.current?.close()}>
+              Cancel
+            </button>
+            <button type="button" onClick={generate}>
+              Generate!
+            </button>
           </div>
         )}
       </dialog>
