@@ -143,6 +143,10 @@ export function getGame(
   allowAsync: boolean = true,
 ) {
   if (!size) size = parseInt(localStorage.getItem(LATEST_SIZE_SAVED) ?? "");
+  if (Number.isNaN(size)) {
+    size = 3;
+    name = "default";
+  }
   if (!name) allowAsync = false;
   const source = availableSources(size).find(
     (source) => !name || source.name == name,
