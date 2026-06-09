@@ -37,8 +37,8 @@ const global: GameLibrary = {
           const data: {
             newboard: {
               grids: {
-                value: string[][];
-                solution: string[][];
+                value: number[][];
+                solution: number[][];
               }[];
             };
           } = await res.json();
@@ -47,11 +47,7 @@ const global: GameLibrary = {
       },
       {
         name: "default",
-        load: () =>
-          new Game(
-            "BkEgXBUAASACgAXoAAAAlYAKABIAAZAAALgAAGQABEAJABPAAA" +
-              "AClQAiAFgABcGQVBgA",
-          ),
+        load: () => new Game("YwisoIky0wRqTIjAWDAgRJXBOhAqLMKLgAA"),
       },
       { name: "blank", load: () => new Game(3) },
     ],
@@ -63,12 +59,8 @@ const global: GameLibrary = {
         name: "default",
         load: () =>
           new Game(
-            "vupAAsAArAAqAwAiAAAhoAlvjAAAksAAAosAhAAAAAlAqAAmAA" +
-              "ktAAmAAhAAAlvAlAAAAqAisAAAAAmwsAAinAhAAAmAAAAAAwAk" +
-              "ApAmAAAArAtAAvrAukAAAnAAAAAsnAAAAAoAAAhmAipAAtAmAA" +
-              "AAuAvAwAsAAAAAAtAAAsAwmAAjqjAAAAAliArAAAAuAsjAAAuA" +
-              "ArAAiqAAuAArAwAAAAAhAmkAAAhpAAAswiAloAAAwAvAtAAqAA" +
-              "sAAnrp",
+            "h7uDZoy-iIXU9IT2L7QBRkqT4VICnlAyjsFf7I2QFQPpsKhpw9p2YsDdg" +
+              "XEKo4OKh159sDg2_UlmQKRaDrch00RydNPggrMQwN_ipcfecMmy2sAA",
           ),
       },
       { name: "blank", load: () => new Game(4) },
@@ -81,19 +73,13 @@ const global: GameLibrary = {
         name: "default",
         load: () =>
           new Game(
-            "4ApoAlAAjAzAmhAA3A5AtA1A2AAAAAvAi0mpAytAAsu1AxAhAA" +
-              "AAAjAAA2AyAAAAAtAAmh3vAAAAvAt2uA1AwkAr3AiAqzAyAAsA" +
-              "AAi5An3AArAAA2AxAyoAAA0AmAAAArAjAshiAxmAAAA3ApAAol" +
-              "AAAAAAA3yAuwAAA2AAAAArAtAAAnAA1A0A23rAAhviAsqwx4Ay" +
-              "AxA3hAAAA512zAAAntplAAqmiAtumAAAAxpnAAoqzAjAAAA5Ah" +
-              "qiAyAz4lAAAA2AAp5AAojnAAAAAoAAAvAAxApAAzAAAqAsAyAk" +
-              "A2AwAAAsAA0thqxAArAAAlAvAuAtAlAyAAA5AAnA3AAiAAAxAA" +
-              "AAA1mhAArtAAiAAAA0lsAwA5pmA4AAAAvAztqAA5kjAAAAyluA" +
-              "2p0AAstqwAAAvyi1AAAA5oAxAvAxhy4mAnlrAAuksAiA5AA2AA" +
-              "A3AuAAAAAoAAAplArvAAAAAAAirAAqA2AAAAm0AnupAwAvAAAA" +
-              "oAwAAAizA1AxAAAmAA0vApsAAAmAA3AryAnAj5AphAsA4otA1A" +
-              "AAAxswuAAkAAAAAlA1AAA3AAAAAhA5AxmlAA1kAsot3AjAAAAA" +
-              "1A2A4ApAoAAy3AuAkAAiA5mAvA",
+            "puonSETJLAbOFjRqC5DnLQxsK7dGCAEQ1YgsJYNrguWa2tF8arZCpyYlY" +
+              "h4TbFQ1YMZxmlCpErghYShsoJ5AG2K28agqWCY0ZtdqiC6FXTfhuxYN" +
+              "oA401yE1lEhTLCstlDCiYnpyRBwgphYst5A1KOCeKYE4uMFBkKVbFG1" +
+              "XiszsgpwKhIuWrEjEcEzYhGANJYCqwhDOSte4olbhcyspOI4gxkta0Z" +
+              "ldlN4uxh0DidguYQY7yppKi2OtC4NRstBOKJFVwCGopahLmmtoXrgnX" +
+              "iHJowEpncorEpsqxTIuFECtvPY0DCu-0jBI0GwIHDCWQ0jVz2bIgaNW" +
+              "6hOY7LUZC4lXAAA",
           ),
       },
       { name: "blank", load: () => new Game(5) },
@@ -159,7 +145,7 @@ export function getGame(
 export function saveGame(game: Game, name: string = AUTOSAVE_NAME) {
   const savedGames = getSavedGames() ?? {};
   if (!savedGames[game.size]) savedGames[game.size] = {};
-  savedGames[game.size][name] = game.save();
+  savedGames[game.size][name] = game.save("binary", true, true);
   localStorage.setItem(SAVED_GAMES_KEY, JSON.stringify(savedGames));
   localStorage.setItem(LATEST_SIZE_SAVED, game.size.toString());
 }

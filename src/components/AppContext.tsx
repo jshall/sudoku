@@ -29,7 +29,7 @@ export function useAppContext(init: string) {
   });
   const [highlightValue, setHighlightValue] = useState<number | null>(null);
   const solved = useSyncExternalStore(
-    game.valueUpdates.subscribe,
+    game.receiveStateUpdates,
     () => game.solved,
   );
   const [tokens, setTokens] = useState(game.tokens);
@@ -46,7 +46,7 @@ export function useAppContext(init: string) {
   // Update tokens
   useEffect(() => {
     window.game = game;
-    return game.valueUpdates.subscribe(() => {
+    return game.receiveStateUpdates(() => {
       setTokens([...game.tokens]);
       if (
         highlightValue !== null &&

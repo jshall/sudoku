@@ -1,4 +1,6 @@
-export type Dispatcher = ReturnType<typeof createDispatcher>;
+export type Dispatcher<Args extends unknown[] = []> = ReturnType<
+  typeof createDispatcher<Args>
+>;
 export function createDispatcher<Args extends unknown[] = []>() {
   type Handler = (...args: Args) => void;
   const handlers: Handler[] = [];

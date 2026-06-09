@@ -12,18 +12,11 @@ const cssTile = css({
 });
 
 export function useCellContext(cell: Cell) {
-  const value = useSyncExternalStore(
-    cell.valueUpdates.subscribe,
-    () => cell.value,
-  );
-
-  const locked = useSyncExternalStore(
-    cell.lockUpdates.subscribe,
-    () => cell.locked,
-  );
+  const value = useSyncExternalStore(cell.onValueChanged, () => cell.value);
+  const locked = useSyncExternalStore(cell.onLockChanged, () => cell.locked);
 
   const noteString = useSyncExternalStore(
-    cell.noteUpdates.subscribe,
+    cell.onNotesChanged,
     () => cell.notes,
   );
 

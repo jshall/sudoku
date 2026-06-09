@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { cssGrid, cx, varBorderWidth } from "utilities/styles";
 import { AppContext } from "./AppContext";
 import { Tile } from "./Tile";
@@ -40,16 +40,23 @@ const cssSolved = css({
 
 export default function Board() {
   const { game, solved } = useContext(AppContext)!;
+  const tiles = useMemo(
+    () =>
+      game
+        .map((cell) => cell, "blocks")
+        .map((group, i) => (
+          <div key={i} css={[cssGrid, cssBlock]}>
+            {group.map((cell, i) => (
+              <Tile key={i} cell={cell} />
+            ))}
+          </div>
+        )),
+    [game],
+  );
 
   return (
     <div className={cx({ solved })} css={[cssGrid, cssBoard]}>
-      {game.blocks.map((group, i) => (
-        <div key={i} css={[cssGrid, cssBlock]}>
-          {group.map((cell, i) => (
-            <Tile key={i} cell={cell} />
-          ))}
-        </div>
-      ))}
+      {tiles}
       <div css={cssSolved}>Solved!</div>
     </div>
   );
