@@ -27,16 +27,27 @@ export function useAppContext(init: string) {
     }
     return getGame();
   });
-  const [highlightValue, setHighlightValue] = useState<number | null>(null);
+  const [highlightValue, shv] = useState<number | null>(null);
   const solved = useSyncExternalStore(
     game.receiveStateUpdates,
     () => game.solved,
   );
   const [tokens, setTokens] = useState(game.tokens);
 
+  const setHighlightValue = useCallback(
+    (value: number | null) => {
+      if (value === null || tokens.every((t) => t.count == game.length))
+        return shv(null);
+      while (value == highlightValue || tokens[value].count == game.length)
+        value = (value + 1) % game.length;
+      shv(value);
+    },
+    [tokens, game.length, highlightValue],
+  );
+
   const newGame = useCallback(
     (game: Game) => {
-      setHighlightValue(null);
+      shv(null);
       setTokens([...game.tokens]);
       setGame(game);
     },
@@ -52,10 +63,10 @@ export function useAppContext(init: string) {
         highlightValue !== null &&
         game.tokens[highlightValue].count === game.length
       )
-        setHighlightValue(null);
+        setHighlightValue((highlightValue + 1) % game.length);
       saveGame(game);
     });
-  }, [game, setTokens, highlightValue]);
+  }, [game, setTokens, highlightValue, setHighlightValue]);
 
   return {
     game,

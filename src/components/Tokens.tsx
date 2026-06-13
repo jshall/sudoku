@@ -42,31 +42,20 @@ export function Tokens() {
 
   return (
     <div css={[cssFlex, cssFlexDirectionShort]}>
-      {tokens.map(({ token, count }, i) => {
-        const events =
-          tokens[i].count === tokens.length
-            ? {}
-            : {
-                onClick() {
-                  setHighlightValue((v) => (i === v ? null : i));
-                },
-              };
-        return (
-          <div
-            key={i}
-            className={cx({
-              clickable: "onClick" in events,
-              highlight: highlightValue === i,
-              complete: count === tokens.length,
-            })}
-            css={[cssFlex, cssToken]}
-            {...events}
-          >
-            {token}
-            <div css={cssCount}>{count}</div>
-          </div>
-        );
-      })}
+      {tokens.map(({ token, count }, i) => (
+        <div
+          key={i}
+          className={cx("clickable", {
+            highlight: highlightValue === i,
+            complete: count === tokens.length,
+          })}
+          css={[cssFlex, cssToken]}
+          onClick={() => setHighlightValue(highlightValue === i ? null : i)}
+        >
+          {token}
+          <div css={cssCount}>{count}</div>
+        </div>
+      ))}
     </div>
   );
 }
