@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { useContext, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import {
   availableSizes,
   availableSources,
@@ -63,9 +63,12 @@ export function NewGame() {
     setSize(size);
   }
 
+  const open = useCallback(() => dialog.current?.showModal(), [dialog]);
+  const close = useCallback(() => dialog.current?.close(), [dialog]);
+
   return (
     <>
-      <button type="button" onClick={() => dialog.current?.showModal()}>
+      <button type="button" onClick={open}>
         New Game
       </button>
       <dialog ref={dialog} css={[cssDialog, cssBoxShadow]}>
@@ -98,10 +101,10 @@ export function NewGame() {
           <div>Generating...</div>
         ) : (
           <div css={[cssFlex, { gap: ".6em" }]}>
-            <button type="button" onClick={() => dialog.current?.close()}>
+            <button type="reset" onClick={close}>
               Cancel
             </button>
-            <button type="button" onClick={generate}>
+            <button type="submit" onClick={generate}>
               Generate!
             </button>
           </div>

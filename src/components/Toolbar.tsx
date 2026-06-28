@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { cssFlex, cssFlexDirectionShort } from "utilities/styles";
 import { AppContext } from "./AppContext";
 import { NewGame } from "./NewGame";
@@ -15,6 +15,9 @@ const cssButtonGroup = css({
 export function Toolbar() {
   const { game } = useContext(AppContext)!;
 
+  const lock = useCallback(() => game.lock(), [game]);
+  const reset = useCallback(() => game.clear(), [game]);
+
   return (
     <div css={[cssFlex, cssFlexDirectionShort]}>
       <div css={[cssFlex, cssButtonGroup]}>
@@ -22,10 +25,10 @@ export function Toolbar() {
       </div>
       <Tokens />
       <div css={[cssFlex, cssButtonGroup]}>
-        <button type="button" onClick={() => game.lock()}>
+        <button type="button" onClick={lock}>
           Lock
         </button>
-        <button type="button" onClick={() => game.clear()}>
+        <button type="button" onClick={reset}>
           Reset
         </button>
       </div>
