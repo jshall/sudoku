@@ -36,9 +36,12 @@ export function useAppContext(init: string) {
 
   const setHighlightValue = useCallback(
     (value: number | null) => {
-      if (value === null || tokens.every((t) => t.count == game.length))
-        return shv(null);
-      while (value == highlightValue || tokens[value].count == game.length)
+      const open = tokens
+        .map(({ left }, i) => (left > 0 ? i : null))
+        .filter((i) => i !== null);
+      if (value === null || open.length == 0) return shv(null);
+      if (open.length == 1) return shv(open[0]);
+      while (value == highlightValue || tokens[value].left == 0)
         value = (value + 1) % game.length;
       shv(value);
     },
@@ -59,10 +62,7 @@ export function useAppContext(init: string) {
     window.game = game;
     return game.receiveStateUpdates(() => {
       setTokens([...game.tokens]);
-      if (
-        highlightValue !== null &&
-        game.tokens[highlightValue].count === game.length
-      )
+      if (highlightValue !== null && game.tokens[highlightValue].left === 0)
         setHighlightValue((highlightValue + 1) % game.length);
       saveGame(game);
     });

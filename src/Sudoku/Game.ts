@@ -11,14 +11,14 @@ export class Game {
   };
   public readonly size: number;
   public readonly length: number;
-  public readonly tokens: readonly { readonly token: string; count: number }[];
+  public readonly tokens: readonly { readonly token: string; left: number }[];
   public receiveStateUpdates: Dispatcher["subscribe"];
 
   constructor(init: number | State) {
     const { size, length, state } = parseState(init);
     this.size = size;
     this.length = length;
-    this.tokens = getTokens(size).map((token) => ({ token, count: 0 }));
+    this.tokens = getTokens(size).map((token) => ({ token, left: length }));
     const stateDispatcher = createDispatcher();
     this.receiveStateUpdates = stateDispatcher.subscribe;
 

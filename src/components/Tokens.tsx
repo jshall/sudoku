@@ -42,18 +42,18 @@ export function Tokens() {
 
   return (
     <div css={[cssFlex, cssFlexDirectionShort]}>
-      {tokens.map(({ token, count }, i) => (
+      {tokens.map(({ token, left }, i) => (
         <div
           key={i}
           className={cx("clickable", {
             highlight: highlightValue === i,
-            complete: count === tokens.length,
+            complete: left === 0,
           })}
           css={[cssFlex, cssToken]}
           onClick={() => setHighlightValue(highlightValue === i ? null : i)}
         >
           {token}
-          <div css={cssCount}>{count}</div>
+          {left ? <div css={cssCount}>{left}</div> : null}
         </div>
       ))}
     </div>

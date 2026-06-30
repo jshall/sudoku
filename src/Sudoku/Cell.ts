@@ -69,7 +69,7 @@ export class Cell {
     }
     const params = [value === null ? -1 : 1, value ?? this._value!] as const;
     this._value = value;
-    this.tokens[params[1]].count += params[0];
+    this.tokens[params[1]].left -= params[0];
     this.valueChanged.dispatch();
     this.stateChanged();
     this.updateGroups(...params);
