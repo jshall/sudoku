@@ -18,9 +18,7 @@ const cssToken = css({
   "&.highlight": {
     background: "radial-gradient(var(--highlight) 50%, #fff0 85%)",
   },
-  "&.complete": {
-    color: "var(--pen)",
-  },
+  "&.complete": { color: "rgb(from var(--pencil) r g b / 0.2)" },
 });
 
 const cssCount = css({
@@ -31,7 +29,6 @@ const cssCount = css({
   color: "var(--pen)",
   fontWeight: "bolder",
   transform: "translate(15%, 0%)",
-  background: "radial-gradient(var(--highlight) 50%, #fff0 85%)",
   borderRadius: "50%",
   width: "1.3em",
   padding: ".3em .2em",
@@ -45,8 +42,9 @@ export function Tokens() {
       {tokens.map(({ token, left }, i) => (
         <div
           key={i}
-          className={cx("clickable", {
+          className={cx({
             highlight: highlightValue === i,
+            clickable: left !== 0,
             complete: left === 0,
           })}
           css={[cssFlex, cssToken]}
